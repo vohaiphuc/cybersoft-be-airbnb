@@ -15,6 +15,7 @@ INSERT INTO vi_tri (ten_vi_tri, hinh_anh, tinh_thanh, quoc_gia) VALUES
     ('Quận 1', 'image_quan_1.jpg', 'Hồ Chí Minh', 'Việt Nam'),
     ('Dĩ An', 'image_di_an.jpg', 'Bình Dương', 'Việt Nam');
 
+-- Theo diagram thì có ban_la với ban_ui, vì 2 cái là một nên chỉ để ban_ui
 DROP TABLE IF EXISTS phong;
 CREATE TABLE phong(
 	id INT PRIMARY KEY AUTO_INCREMENT,
