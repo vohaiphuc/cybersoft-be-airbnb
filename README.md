@@ -58,10 +58,10 @@ Controller method
 # Viết mô tả swagger
 
 [LÀM GÌ]: nội dung
-vd:
 
-- LẤY: danh sách tất cả phòng
-- CẬP NHẬT: ảnh đại diện của người dùng
+- VD:
+  - LẤY: danh sách tất cả phòng
+  - CẬP NHẬT: ảnh đại diện của người dùng
 
 LÀM GÌ:
 
