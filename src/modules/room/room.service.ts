@@ -21,6 +21,19 @@ export class RoomService {
     return ResponseData(HttpStatus.OK, Message.ROOM.CREATE_ROOM_SUCCESS, '');
   }
 
+  async getRoomByLocationId(locationId) {
+    const roomByLocationId = await this.prisma.phong.findMany({
+      where: {
+        vi_tri_id: locationId,
+      },
+    });
+    return ResponseData(
+      HttpStatus.OK,
+      Message.ROOM.SUCCESS_FIND_BY_ROOM_ID,
+      roomByLocationId,
+    );
+  }
+
   async getAllRoomsPagination(pageIndex, pageSize, keyword) {
     const roomListPagination = await this.prisma.phong.findMany({
       where: {

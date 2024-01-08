@@ -48,6 +48,7 @@ export const Message = {
   },
   ROOM: {
     SUCCESS: 'Lấy thông tin phòng thành công',
+    SUCCESS_FIND_BY_ROOM_ID: 'Lấy thông tin phòng theo ID vị trí thành công',
     SUCCESS_PAGINATION: 'Lấy thông tin phòng theo phân trang thành công',
     SUCCESS_ID: 'Lấy thông tin phòng theo ID thành công',
     NOT_FOUND: 'Không tìm thấy phòng',

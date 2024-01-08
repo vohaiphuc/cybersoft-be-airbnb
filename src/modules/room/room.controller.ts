@@ -41,6 +41,11 @@ export class RoomController {
     return this.roomService.createRoom(createRoomDto);
   }
 
+  @Get('get-room-by-location-id')
+  getRoomByLocationId(@Query('locationId') locationId: string) {
+    return this.roomService.getRoomByLocationId(+locationId);
+  }
+
   @Get('pagination-search')
   getAllRoomsPagination(
     @Query('pageIndex') pageIndex: string,
