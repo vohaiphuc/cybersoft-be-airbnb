@@ -109,7 +109,7 @@ export class RoomController {
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
-        destination: process.cwd() + '/public/img/rooms',
+        destination: process.cwd() + '/public/img',
         filename: (_, file, callback) =>
           callback(null, new Date().getTime() + '_' + file.originalname),
       }),
