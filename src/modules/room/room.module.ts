@@ -8,4 +8,4 @@ import { LocationModule } from './location/location.module';
   providers: [RoomService],
   imports: [LocationModule],
 })
-export class RoomModule {}
+export class RoomModule { }
