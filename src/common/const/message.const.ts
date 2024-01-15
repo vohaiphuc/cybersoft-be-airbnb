@@ -1,4 +1,11 @@
 export const Message = {
+    TOKEN: {
+        SUCCESS_REFRESH: "Làm mới token thành công",
+        FAIL: "Token không hợp lệ",
+        FAIL_KEY: "Khóa không đúng",
+        FAIL_EXPIRED: "Token hết hạn",
+        FAIL_MISSING: "Không có token",
+    },
     LOGIN: {
         SUCCESS: "Đăng nhập thành công",
         FAIL: "Đăng nhập thất bại",
@@ -38,6 +45,7 @@ export const Message = {
         UPDATE_PASSWORD_FAIL_INCORRECT: "Thay đổi mật khẩu thất bại",
         UPDATE_AVATAR_SUCCESS: "Thay đổi ảnh đại diện thành công",
         UNAUTHORIZED: "Vai trò không được phép truy cập tài nguyên",
-        DELETE_SUCESS: "Xóa tài khoản thành công",
+        DELETE_SUCCESS: "Xóa tài khoản thành công",
+        FAIL_PAGEINDEX: "PageIndex vượt quá số trang có thể có"
     },
 }
