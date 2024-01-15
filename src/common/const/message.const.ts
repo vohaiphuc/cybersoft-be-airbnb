@@ -33,8 +33,11 @@ export const Message = {
         SUCCESS: "Lấy thông tin người dùng thành công",
         NOT_FOUND: "Không tìm thấy người dùng",
         UPDATE_INFO_SUCCESS: "Cập nhật thông tin tài khoản thành công",
+        UPDATE_INFO_FAIL_UNAUTHORIZED: "Cập nhật thất bại, vai trò không được phép truy cập tài nguyên",
         UPDATE_PASSWORD_SUCCESS: "Thay đổi mật khẩu thành công",
         UPDATE_PASSWORD_FAIL_INCORRECT: "Thay đổi mật khẩu thất bại",
         UPDATE_AVATAR_SUCCESS: "Thay đổi ảnh đại diện thành công",
+        UNAUTHORIZED: "Vai trò không được phép truy cập tài nguyên",
+        DELETE_SUCESS: "Xóa tài khoản thành công",
     },
 }
