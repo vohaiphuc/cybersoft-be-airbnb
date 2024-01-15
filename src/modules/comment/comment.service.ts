@@ -1,11 +1,19 @@
-import { ForbiddenException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { CommentDto } from './dto/comment.dto';
 import { ResponseData } from 'src/common/util/response.utils';
 import { Message } from 'src/common/const/message.const';
+import { UserService } from '../user/user.service';
+import { Role } from '../auth/dto/auth.dto';
 
 @Injectable()
 export class CommentService {
+  constructor(private readonly userService: UserService) {}
   private prisma = new PrismaClient();
 
   async getCommentList() {
@@ -21,10 +29,12 @@ export class CommentService {
     }
   }
 
-  async postNewComment(dto: CommentDto) {
+  async postNewComment(dto: CommentDto, email: string) {
     try {
+      const user = await this.userService.verifyUser(email);
+
       const comment = await this.prisma.binh_luan.create({
-        data: dto,
+        data: { ...dto, ma_nguoi_binh_luan: user.id },
       });
 
       return ResponseData(
@@ -37,8 +47,29 @@ export class CommentService {
     }
   }
 
-  async updateComment(id: number, dto: CommentDto) {
+  async updateComment(id: number, dto: CommentDto, email: string) {
     try {
+      const user = await this.userService.verifyUser(email);
+      const userRole = user.role;
+      const { ADMIN, USER } = Role;
+      let oldComment = await this.prisma.binh_luan.findUnique({
+        where: { id },
+      });
+      if (!oldComment) {
+        return ResponseData(
+          HttpStatus.NOT_FOUND,
+          Message.COMMENT.NOT_FOUND,
+          null,
+        );
+      }
+
+      if (userRole === USER && user.id !== oldComment.ma_nguoi_binh_luan) {
+        return ResponseData(
+          HttpStatus.UNAUTHORIZED,
+          Message.COMMENT.UNAUTHORIZED,
+          null,
+        );
+      }
       const comment = await this.prisma.binh_luan.update({
         where: { id },
         data: dto,
@@ -53,25 +84,41 @@ export class CommentService {
     }
   }
 
-  async deleteComment(id: number) {
+  async deleteComment(id: number, email: string) {
     try {
-      let checkAvailable = await this.prisma.binh_luan.findUnique({
+      const checkUser = await this.userService.verifyUser(email);
+      const checkUserRole = checkUser.role;
+      const { ADMIN, USER } = Role;
+
+      let comment = await this.prisma.binh_luan.findUnique({
         where: { id },
       });
-      if (!checkAvailable) {
+
+      if (!comment) {
         return ResponseData(
           HttpStatus.NOT_FOUND,
           Message.COMMENT.NOT_FOUND,
           null,
         );
       }
-      const comment = await this.prisma.binh_luan.delete({
+
+      if (
+        checkUserRole === USER &&
+        checkUser.id !== comment.ma_nguoi_binh_luan
+      ) {
+        return ResponseData(
+          HttpStatus.UNAUTHORIZED,
+          Message.COMMENT.UNAUTHORIZED,
+          null,
+        );
+      }
+      const deletedComment = await this.prisma.binh_luan.delete({
         where: { id },
       });
       return ResponseData(
         HttpStatus.OK,
         Message.COMMENT.DELETED_COMMENT_SUCCESS,
-        comment,
+        deletedComment,
       );
     } catch (error) {
       throw new Error(`${Message.COMMENT.FAIL} ${error.message}`);

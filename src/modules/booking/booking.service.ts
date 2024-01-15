@@ -3,9 +3,12 @@ import { PrismaClient } from '@prisma/client';
 import { BookingDto } from './dto/booking.dto';
 import { ResponseData } from 'src/common/util/response.utils';
 import { Message } from 'src/common/const/message.const';
+import { UserService } from '../user/user.service';
+import { Role } from '../auth/dto/auth.dto';
 
 @Injectable()
 export class BookingService {
+  constructor(private readonly userService: UserService) {}
   private prisma = new PrismaClient();
 
   async getBookingList() {
@@ -28,17 +31,14 @@ export class BookingService {
     }
   }
 
-  async postNewBookingSchedule(dto: BookingDto) {
+  async postNewBookingSchedule(dto: BookingDto, email: string) {
     try {
+      const user = await this.userService.verifyUser(email);
+
       const bookingSchedule = await this.prisma.dat_phong.create({
-        data: {
-          ma_phong: dto.ma_phong,
-          ngay_den: dto.ngay_den,
-          ngay_di: dto.ngay_di,
-          so_luong_khach: dto.so_luong_khach,
-          ma_nguoi_dat: dto.ma_nguoi_dat,
-        },
+        data: { ...dto, ma_nguoi_dat: user.id },
       });
+
       return ResponseData(
         HttpStatus.OK,
         Message.BOOKING.POST_BOOKING_SUCCESS,
@@ -49,8 +49,12 @@ export class BookingService {
     }
   }
 
-  async getBookingSchedule(id: number) {
+  async getBookingSchedule(id: number, email: string) {
     try {
+      const user = await this.userService.verifyUser(email);
+      const userRole = user.role;
+      const { ADMIN, USER } = Role;
+
       const bookingSchedule = await this.prisma.dat_phong.findUnique({
         where: {
           id,
@@ -60,6 +64,13 @@ export class BookingService {
         return ResponseData(
           HttpStatus.NOT_FOUND,
           Message.BOOKING.NOT_FOUND,
+          null,
+        );
+      }
+      if (userRole === USER && user.id !== bookingSchedule.ma_nguoi_dat) {
+        return ResponseData(
+          HttpStatus.UNAUTHORIZED,
+          Message.COMMENT.UNAUTHORIZED,
           null,
         );
       }
@@ -73,14 +84,39 @@ export class BookingService {
     }
   }
 
-  async updateBookingSchedule(id: number, dto: BookingDto) {
+  async updateBookingSchedule(id: number, dto: BookingDto, email: string) {
     try {
+      const user = await this.userService.verifyUser(email);
+      const userRole = user.role;
+      const { ADMIN, USER } = Role;
+      const oldSchedule = await this.prisma.dat_phong.findUnique({
+        where: {
+          id,
+        },
+      });
+
+      if (oldSchedule === null) {
+        return ResponseData(
+          HttpStatus.NOT_FOUND,
+          Message.BOOKING.NOT_FOUND,
+          null,
+        );
+      }
+      if (userRole === USER && user.id !== oldSchedule.ma_nguoi_dat) {
+        return ResponseData(
+          HttpStatus.UNAUTHORIZED,
+          Message.COMMENT.UNAUTHORIZED,
+          null,
+        );
+      }
+
       const bookingSchedule = await this.prisma.dat_phong.update({
         where: {
           id,
         },
         data: dto,
       });
+
       return ResponseData(
         HttpStatus.OK,
         Message.BOOKING.UPDATED_BOOKING_SUCCESS,
@@ -91,18 +127,32 @@ export class BookingService {
     }
   }
 
-  async deleteBookingSchedule(id: number) {
+  async deleteBookingSchedule(id: number, email: string) {
     try {
-      let checkAvailable = await this.prisma.dat_phong.findUnique({
+      const user = await this.userService.verifyUser(email);
+      const userRole = user.role;
+      const { ADMIN, USER } = Role;
+
+      let oldSchedule = await this.prisma.dat_phong.findUnique({
         where: { id },
       });
-      if (!checkAvailable) {
+
+      if (!oldSchedule) {
         return ResponseData(
           HttpStatus.NOT_FOUND,
           Message.BOOKING.NOT_FOUND,
           null,
         );
       }
+
+      if (userRole === USER && user.id !== oldSchedule.ma_nguoi_dat) {
+        return ResponseData(
+          HttpStatus.UNAUTHORIZED,
+          Message.COMMENT.UNAUTHORIZED,
+          null,
+        );
+      }
+
       const bookingSchedule = await this.prisma.dat_phong.delete({
         where: {
           id,
