@@ -15,6 +15,12 @@ export class RoomService {
   }
 
   async createRoom(createRoomDto: CreateRoomDto) {
+    const viTri = await this.prisma.vi_tri.findUnique({
+      where: { id: createRoomDto.vi_tri_id },
+    });
+    if (!viTri) {
+      return ResponseData(HttpStatus.NOT_FOUND, Message.LOCATION.NOT_FOUND, '');
+    }
     await this.prisma.phong.create({
       data: createRoomDto,
     });
@@ -22,6 +28,12 @@ export class RoomService {
   }
 
   async getRoomByLocationId(locationId) {
+    const viTri = await this.prisma.vi_tri.findUnique({
+      where: { id: locationId },
+    });
+    if (!viTri) {
+      return ResponseData(HttpStatus.NOT_FOUND, Message.LOCATION.NOT_FOUND, '');
+    }
     const roomByLocationId = await this.prisma.phong.findMany({
       where: {
         vi_tri_id: locationId,
@@ -59,6 +71,18 @@ export class RoomService {
   }
 
   async updateRoomById(id: number, updateRoomDto: UpdateRoomDto) {
+    const room = await this.prisma.phong.findUnique({
+      where: { id },
+    });
+    if (!room) {
+      return ResponseData(HttpStatus.NOT_FOUND, Message.ROOM.NOT_FOUND, '');
+    }
+    const viTri = await this.prisma.vi_tri.findUnique({
+      where: { id: updateRoomDto.vi_tri_id },
+    });
+    if (!viTri) {
+      return ResponseData(HttpStatus.NOT_FOUND, Message.LOCATION.NOT_FOUND, '');
+    }
     await this.prisma.phong.update({
       where: { id },
       data: updateRoomDto,
@@ -67,20 +91,28 @@ export class RoomService {
   }
 
   async deleteRoomById(id: number) {
+    const room = await this.prisma.phong.findUnique({
+      where: { id },
+    });
+    if (!room) {
+      return ResponseData(HttpStatus.NOT_FOUND, Message.ROOM.NOT_FOUND, '');
+    }
     await this.prisma.phong.delete({
       where: { id },
     });
     return ResponseData(HttpStatus.OK, Message.ROOM.DELETE_SUCESS, '');
   }
 
-  async uploadRoomImage(id, token, file: Express.Multer.File) {
+  async uploadRoomImage(id, file: Express.Multer.File) {
     if (!file) {
       return ResponseData(HttpStatus.BAD_REQUEST, Message.IMAGE.NOT_FOUND, '');
     }
-    // const tokenRealData = this.jwtService.decode(token);
-    // if (data.ma_nguoi_tao !== tokenRealData.user_id) {
-    //   return responseData(403, "Forbidden! Not user's created job!", '');
-    // }
+    const room = await this.prisma.phong.findUnique({
+      where: { id },
+    });
+    if (!room) {
+      return ResponseData(HttpStatus.NOT_FOUND, Message.ROOM.NOT_FOUND, '');
+    }
     await this.prisma.phong.update({
       where: {
         id,

@@ -9,10 +9,10 @@ import {
   Post,
   Put,
   Query,
-  Req,
   UploadedFile,
   UseInterceptors,
   UseFilters,
+  HttpStatus,
 } from '@nestjs/common';
 import { RoomService } from './room.service';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
@@ -22,7 +22,9 @@ import { diskStorage } from 'multer';
 import { HttpExceptionFilter } from 'src/filters/http-exception.fitler';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
-import { UploadRoomImageDto } from './dto/upload-room-image.dto copy';
+import { UploadRoomImageDto } from './dto/upload-room-image.dto';
+import { AdminJwtGuard } from 'src/decorators/jwt-guard.decorator';
+import { Message } from 'src/common/const/message.const';
 
 @ApiTags('Room')
 @Controller('/api/rooms')
@@ -36,13 +38,27 @@ export class RoomController {
     return this.roomService.getAllRooms();
   }
 
+  @AdminJwtGuard
   @Post('')
   createRoom(@Body(CustomValidationPipe) createRoomDto: CreateRoomDto) {
     return this.roomService.createRoom(createRoomDto);
   }
 
   @Get('get-room-by-location-id')
-  getRoomByLocationId(@Query('locationId') locationId: string) {
+  getRoomByLocationId(
+    @Query(
+      'locationId',
+      new ParseIntPipe({
+        exceptionFactory: () => {
+          throw new HttpException(
+            Message.REQUEST.ID_ERROR,
+            HttpStatus.BAD_REQUEST,
+          );
+        },
+      }),
+    )
+    locationId: string,
+  ) {
     return this.roomService.getRoomByLocationId(+locationId);
   }
 
@@ -65,7 +81,10 @@ export class RoomController {
       'id',
       new ParseIntPipe({
         exceptionFactory: () => {
-          throw new HttpException('ID không hợp lệ', 404);
+          throw new HttpException(
+            Message.REQUEST.ID_ERROR,
+            HttpStatus.BAD_REQUEST,
+          );
         },
       }),
     )
@@ -74,6 +93,7 @@ export class RoomController {
     return this.roomService.getRoomById(id);
   }
 
+  @AdminJwtGuard
   @Put(':id')
   updateRoomById(
     @Body(CustomValidationPipe) updateRoomDto: UpdateRoomDto,
@@ -81,7 +101,10 @@ export class RoomController {
       'id',
       new ParseIntPipe({
         exceptionFactory: () => {
-          throw new HttpException('ID không hợp lệ', 404);
+          throw new HttpException(
+            Message.REQUEST.ID_ERROR,
+            HttpStatus.BAD_REQUEST,
+          );
         },
       }),
     )
@@ -90,13 +113,17 @@ export class RoomController {
     return this.roomService.updateRoomById(id, updateRoomDto);
   }
 
+  @AdminJwtGuard
   @Delete(':id')
   deleteRoomById(
     @Param(
       'id',
       new ParseIntPipe({
         exceptionFactory: () => {
-          throw new HttpException('ID không hợp lệ', 404);
+          throw new HttpException(
+            Message.REQUEST.ID_ERROR,
+            HttpStatus.BAD_REQUEST,
+          );
         },
       }),
     )
@@ -105,6 +132,7 @@ export class RoomController {
     return this.roomService.deleteRoomById(id);
   }
 
+  @AdminJwtGuard
   @Post('/upload-image')
   @UseInterceptors(
     FileInterceptor('image', {
@@ -120,11 +148,20 @@ export class RoomController {
     type: UploadRoomImageDto,
   })
   uploadRoomImage(
-    @Req() request,
-    @Query('roomId') roomId: string,
+    @Query(
+      'roomId',
+      new ParseIntPipe({
+        exceptionFactory: () => {
+          throw new HttpException(
+            Message.REQUEST.ID_ERROR,
+            HttpStatus.BAD_REQUEST,
+          );
+        },
+      }),
+    )
+    roomId: string,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    const token = '';
-    return this.roomService.uploadRoomImage(+roomId, token, file);
+    return this.roomService.uploadRoomImage(+roomId, file);
   }
 }

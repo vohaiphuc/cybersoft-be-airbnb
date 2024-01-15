@@ -4,12 +4,12 @@ import {
   Delete,
   Get,
   HttpException,
+  HttpStatus,
   Param,
   ParseIntPipe,
   Post,
   Put,
   Query,
-  Req,
   UploadedFile,
   UseFilters,
   UseInterceptors,
@@ -23,6 +23,8 @@ import { UpdateLocationDto } from './dto/update-location.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { UploadLocationImageDto } from './dto/upload-location-image.dto';
+import { AdminJwtGuard } from 'src/decorators/jwt-guard.decorator';
+import { Message } from 'src/common/const/message.const';
 
 @ApiTags('Location')
 @Controller('/api/locations')
@@ -36,6 +38,7 @@ export class LocationController {
     return this.locationService.getAllLocations();
   }
 
+  @AdminJwtGuard
   @Post('')
   createLocation(
     @Body(CustomValidationPipe) createLocationDto: CreateLocationDto,
@@ -62,7 +65,10 @@ export class LocationController {
       'id',
       new ParseIntPipe({
         exceptionFactory: () => {
-          throw new HttpException('ID không hợp lệ', 404);
+          throw new HttpException(
+            Message.REQUEST.ID_ERROR,
+            HttpStatus.BAD_REQUEST,
+          );
         },
       }),
     )
@@ -71,6 +77,7 @@ export class LocationController {
     return this.locationService.getLocationById(id);
   }
 
+  @AdminJwtGuard
   @Put(':id')
   updateLocationById(
     @Body(CustomValidationPipe) updateLocationDto: UpdateLocationDto,
@@ -78,7 +85,10 @@ export class LocationController {
       'id',
       new ParseIntPipe({
         exceptionFactory: () => {
-          throw new HttpException('ID không hợp lệ', 404);
+          throw new HttpException(
+            Message.REQUEST.ID_ERROR,
+            HttpStatus.BAD_REQUEST,
+          );
         },
       }),
     )
@@ -87,13 +97,17 @@ export class LocationController {
     return this.locationService.updateLocationById(id, updateLocationDto);
   }
 
+  @AdminJwtGuard
   @Delete(':id')
   deleteLocationById(
     @Param(
       'id',
       new ParseIntPipe({
         exceptionFactory: () => {
-          throw new HttpException('ID không hợp lệ', 404);
+          throw new HttpException(
+            Message.REQUEST.ID_ERROR,
+            HttpStatus.BAD_REQUEST,
+          );
         },
       }),
     )
@@ -102,6 +116,7 @@ export class LocationController {
     return this.locationService.deleteLocationById(id);
   }
 
+  @AdminJwtGuard
   @Post('/upload-image')
   @UseInterceptors(
     FileInterceptor('image', {
@@ -117,11 +132,20 @@ export class LocationController {
     type: UploadLocationImageDto,
   })
   uploadLocationImage(
-    @Req() request,
-    @Query('locationId') locationId: string,
+    @Query(
+      'locationId',
+      new ParseIntPipe({
+        exceptionFactory: () => {
+          throw new HttpException(
+            Message.REQUEST.ID_ERROR,
+            HttpStatus.BAD_REQUEST,
+          );
+        },
+      }),
+    )
+    locationId: string,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    const token = '';
-    return this.locationService.uploadLocationImage(+locationId, token, file);
+    return this.locationService.uploadLocationImage(+locationId, file);
   }
 }

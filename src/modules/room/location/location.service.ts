@@ -43,6 +43,12 @@ export class LocationService {
   }
 
   async getLocationById(id: number) {
+    const viTri = await this.prisma.vi_tri.findUnique({
+      where: { id },
+    });
+    if (!viTri) {
+      return ResponseData(HttpStatus.NOT_FOUND, Message.LOCATION.NOT_FOUND, '');
+    }
     const location = await this.prisma.vi_tri.findUnique({
       where: { id },
     });
@@ -50,6 +56,12 @@ export class LocationService {
   }
 
   async updateLocationById(id: number, updateLocationDto: UpdateLocationDto) {
+    const viTri = await this.prisma.vi_tri.findUnique({
+      where: { id },
+    });
+    if (!viTri) {
+      return ResponseData(HttpStatus.NOT_FOUND, Message.LOCATION.NOT_FOUND, '');
+    }
     await this.prisma.vi_tri.update({
       where: { id },
       data: updateLocationDto,
@@ -62,20 +74,28 @@ export class LocationService {
   }
 
   async deleteLocationById(id: number) {
+    const viTri = await this.prisma.vi_tri.findUnique({
+      where: { id },
+    });
+    if (!viTri) {
+      return ResponseData(HttpStatus.NOT_FOUND, Message.LOCATION.NOT_FOUND, '');
+    }
     await this.prisma.vi_tri.delete({
       where: { id },
     });
     return ResponseData(HttpStatus.OK, Message.LOCATION.DELETE_SUCESS, '');
   }
 
-  async uploadLocationImage(id, token, file: Express.Multer.File) {
+  async uploadLocationImage(id, file: Express.Multer.File) {
     if (!file) {
       return ResponseData(HttpStatus.BAD_REQUEST, Message.IMAGE.NOT_FOUND, '');
     }
-    // const tokenRealData = this.jwtService.decode(token);
-    // if (data.ma_nguoi_tao !== tokenRealData.user_id) {
-    //   return responseData(403, "Forbidden! Not user's created job!", '');
-    // }
+    const viTri = await this.prisma.vi_tri.findUnique({
+      where: { id },
+    });
+    if (!viTri) {
+      return ResponseData(HttpStatus.NOT_FOUND, Message.LOCATION.NOT_FOUND, '');
+    }
     await this.prisma.vi_tri.update({
       where: {
         id,

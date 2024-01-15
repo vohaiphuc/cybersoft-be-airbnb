@@ -60,4 +60,7 @@ export const Message = {
     UPDATE_ROOM_SUCCESS: 'Cập nhật thông tin phòng thành công',
     DELETE_SUCESS: 'Xóa phòng thành công',
   },
+  REQUEST: {
+    ID_ERROR: 'ID không hợp lệ',
+  },
 };
