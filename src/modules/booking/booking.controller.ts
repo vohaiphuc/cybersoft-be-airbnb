@@ -17,7 +17,7 @@ import { BookingDto } from './dto/booking.dto';
 @Controller('api/dat-phong')
 export class BookingController {
   constructor(private bookingService: BookingService) {}
-  
+
   @Get('')
   getBookingList() {
     return this.bookingService.getBookingList();
