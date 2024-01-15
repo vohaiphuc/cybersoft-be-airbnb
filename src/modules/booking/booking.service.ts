@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { BookingDto } from './dto/booking.dto';
 import { PrismaClient } from '@prisma/client';
+import { BookingDto } from './dto/booking.dto';
 
 @Injectable()
 export class BookingService {
