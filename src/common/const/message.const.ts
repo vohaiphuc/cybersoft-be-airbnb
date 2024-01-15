@@ -40,6 +40,8 @@ export const Message = {
     UPDATE_AVATAR_SUCCESS: 'Thay đổi ảnh đại diện thành công',
     UNAUTHORIZED: 'Vai trò không được phép truy cập tài nguyên',
     DELETE_SUCESS: 'Xóa tài khoản thành công',
+    DELETE_SUCCESS: 'Xóa tài khoản thành công',
+    FAIL_PAGEINDEX: 'PageIndex vượt quá số trang có thể có',
   },
   LOCATION: {
     SUCCESS: 'Lấy thông tin vị trí thành công',
@@ -62,5 +64,12 @@ export const Message = {
   },
   REQUEST: {
     ID_ERROR: 'ID không hợp lệ',
+  },
+  TOKEN: {
+    SUCCESS_REFRESH: 'Làm mới token thành công',
+    FAIL: 'Token không hợp lệ',
+    FAIL_KEY: 'Khóa không đúng',
+    FAIL_EXPIRED: 'Token hết hạn',
+    FAIL_MISSING: 'Không có token',
   },
 };

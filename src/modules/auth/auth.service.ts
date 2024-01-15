@@ -25,6 +25,25 @@ export class AuthService {
         })
     }
 
+    async refreshAccessToken(email: string, key: number) {
+        if (!email || !key) {
+            throw new HttpException(Message.TOKEN.FAIL, 404)
+        }
+        const user = await this.prisma.nguoi_dung.findFirst({
+            where: { email }
+        })
+        const refreshToken = user.refresh_token
+        const decodeRefreshToken = this.jwtService.decode(refreshToken)
+        if (decodeRefreshToken.data.key !== key) {
+            throw new HttpException(Message.TOKEN.FAIL_KEY, 404)
+        }
+        const newAccessToken = this.createToken({
+            email,
+            key
+        })
+        return ResponseData(HttpStatus.OK, Message.TOKEN.SUCCESS_REFRESH, { access_token: newAccessToken })
+    }
+
     async signIn(email: string, password: string) {
         if (!email) { throw new HttpException(Message.LOGIN.EMAIL_FAIL, 404) }
         const user = await this.prisma.nguoi_dung.findFirst({
@@ -49,7 +68,7 @@ export class AuthService {
             }
         })
         const decodeRefreshToken = this.jwtService.decode(user.refresh_token)
-        const key = decodeRefreshToken.key
+        const key = decodeRefreshToken.data.key
         const access_token = this.createToken({ email, key })
         const data = {
             access_token,

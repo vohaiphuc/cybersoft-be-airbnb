@@ -1,9 +1,12 @@
-import { Body, Controller, Post, UseFilters } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseFilters } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { HttpExceptionFilter } from 'src/filters/http-exception.fitler';
 import { Role, SignInDto, SignUpDto } from './dto/auth.dto';
 import { CustomValidationPipe } from 'src/pipes/validation.pipe';
+import { JwtGuard } from 'src/decorators/jwt-guard.decorator';
+import { User } from 'src/decorators/user.decorator';
+import { I_Data_Token } from './dto/token-auth.dto';
 
 @ApiTags("Auth")
 @Controller('/api/auth')
@@ -26,5 +29,13 @@ export class AuthController {
   ) {
     const role: Role = Role.USER
     return this.authService.signUp(body, role)
+  }
+
+  @JwtGuard
+  @Get("refresh-token")
+  refreshAccessToken(
+    @User('data') data: I_Data_Token
+  ) {
+    return this.authService.refreshAccessToken(data.email, data.key)
   }
 }
