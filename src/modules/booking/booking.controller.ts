@@ -80,7 +80,7 @@ export class BookingController {
       'ma_nguoi_dat',
       new ParseIntPipe({
         exceptionFactory: () => {
-          throw new HttpException('ID không hợp lệ', 404);
+          throw new HttpException('Mã người dùng không hợp lệ', 404);
         },
       }),
     )

@@ -1,86 +1,142 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { BookingDto } from './dto/booking.dto';
+import { ResponseData } from 'src/common/util/response.utils';
+import { Message } from 'src/common/const/message.const';
 
 @Injectable()
 export class BookingService {
   private prisma = new PrismaClient();
 
   async getBookingList() {
-    const bookingList = await this.prisma.dat_phong.findMany({});
-    return {
-      message: 'All Booking Schedule loaded successful',
-      data: { bookingList },
-    };
+    try {
+      const bookingList = await this.prisma.dat_phong.findMany({});
+      if (bookingList === null) {
+        return ResponseData(
+          HttpStatus.NOT_FOUND,
+          Message.BOOKING.NOT_FOUND,
+          null,
+        );
+      }
+      return ResponseData(
+        HttpStatus.OK,
+        Message.BOOKING.LIST_ALL_SUCCESS,
+        bookingList,
+      );
+    } catch (error) {
+      throw new Error(`${Message.BOOKING.FAIL} ${error.message}`);
+    }
   }
+
   async postNewBookingSchedule(dto: BookingDto) {
-    const bookingSchedule = await this.prisma.dat_phong.create({
-      data: {
-        ma_phong: dto.ma_phong,
-        ngay_den: dto.ngay_den,
-        ngay_di: dto.ngay_di,
-        so_luong_khach: dto.so_luong_khach,
-        ma_nguoi_dat: dto.ma_nguoi_dat,
-      },
-    });
-    return {
-      message: 'New Booking Schedule created successfully',
-      data: { bookingSchedule },
-    };
+    try {
+      const bookingSchedule = await this.prisma.dat_phong.create({
+        data: {
+          ma_phong: dto.ma_phong,
+          ngay_den: dto.ngay_den,
+          ngay_di: dto.ngay_di,
+          so_luong_khach: dto.so_luong_khach,
+          ma_nguoi_dat: dto.ma_nguoi_dat,
+        },
+      });
+      return ResponseData(
+        HttpStatus.OK,
+        Message.BOOKING.POST_BOOKING_SUCCESS,
+        bookingSchedule,
+      );
+    } catch (error) {
+      throw new Error(`${Message.BOOKING.FAIL} ${error.message}`);
+    }
   }
 
   async getBookingSchedule(id: number) {
-    const bookingSchedule = await this.prisma.dat_phong.findUnique({
-      where: {
-        id,
-      },
-    });
-    return {
-      message: 'Booking Schedule loaded successful',
-      data: { bookingSchedule },
-    };
+    try {
+      const bookingSchedule = await this.prisma.dat_phong.findUnique({
+        where: {
+          id,
+        },
+      });
+      if (bookingSchedule === null) {
+        return ResponseData(
+          HttpStatus.NOT_FOUND,
+          Message.BOOKING.NOT_FOUND,
+          null,
+        );
+      }
+      return ResponseData(
+        HttpStatus.OK,
+        Message.BOOKING.GET_BOOKING_SUCCESS,
+        bookingSchedule,
+      );
+    } catch (error) {
+      throw new Error(`${Message.BOOKING.FAIL} ${error.message}`);
+    }
   }
 
   async updateBookingSchedule(id: number, dto: BookingDto) {
-    const bookingSchedule = await this.prisma.dat_phong.update({
-      where: {
-        id,
-      },
-      data: dto,
-    });
-    return {
-      message: 'Booking Schedule updated successful',
-      data: { bookingSchedule },
-    };
+    try {
+      const bookingSchedule = await this.prisma.dat_phong.update({
+        where: {
+          id,
+        },
+        data: dto,
+      });
+      return ResponseData(
+        HttpStatus.OK,
+        Message.BOOKING.UPDATED_BOOKING_SUCCESS,
+        bookingSchedule,
+      );
+    } catch (error) {
+      throw new Error(`${Message.BOOKING.FAIL} ${error.message}`);
+    }
   }
 
   async deleteBookingSchedule(id: number) {
-    let checkAvailable = await this.prisma.dat_phong.findUnique({
-      where: { id },
-    });
-    if (!checkAvailable)
-      throw new ForbiddenException('No booking Schedule match your request');
-    const bookingSchedule = await this.prisma.dat_phong.delete({
-      where: {
-        id,
-      },
-    });
-    return {
-      message: 'Delete booking Schedule successful',
-      data: { bookingSchedule },
-    };
+    try {
+      let checkAvailable = await this.prisma.dat_phong.findUnique({
+        where: { id },
+      });
+      if (!checkAvailable) {
+        return ResponseData(
+          HttpStatus.NOT_FOUND,
+          Message.BOOKING.NOT_FOUND,
+          null,
+        );
+      }
+      const bookingSchedule = await this.prisma.dat_phong.delete({
+        where: {
+          id,
+        },
+      });
+      return ResponseData(
+        HttpStatus.OK,
+        Message.BOOKING.DELETED_BOOKING_SUCCESS,
+        bookingSchedule,
+      );
+    } catch (error) {
+      throw new Error(`${Message.BOOKING.FAIL} ${error.message}`);
+    }
   }
 
   async getBookingListByUser(ma_nguoi_dat: number) {
-    const bookingListByUser = await this.prisma.dat_phong.findMany({
-      where: { ma_nguoi_dat },
-    });
-    if (bookingListByUser.length === 0)
-      throw new ForbiddenException('No booking Schedule match your request');
-    return {
-      message: 'All Booking Schedule By User loaded successful',
-      data: { bookingListByUser },
-      ma_nguoi_dat,
-    };
+    try {
+      const bookingListByUser = await this.prisma.dat_phong.findMany({
+        where: { ma_nguoi_dat },
+      });
+      if (bookingListByUser.length === 0) {
+        return ResponseData(
+          HttpStatus.NOT_FOUND,
+          Message.BOOKING.NOT_FOUND,
+          null,
+        );
+      }
+      return ResponseData(
+        HttpStatus.OK,
+        Message.BOOKING.GET_BOOKING_BY_USER_SUCCESS,
+        bookingListByUser,
+      );
+    } catch (error) {
+      throw new Error(`${Message.BOOKING.FAIL} ${error.message}`);
+    }
   }
 }

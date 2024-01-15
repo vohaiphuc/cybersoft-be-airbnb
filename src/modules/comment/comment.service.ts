@@ -1,68 +1,102 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { CommentDto } from './dto/comment.dto';
+import { ResponseData } from 'src/common/util/response.utils';
+import { Message } from 'src/common/const/message.const';
+
 @Injectable()
 export class CommentService {
   private prisma = new PrismaClient();
 
   async getCommentList() {
-    const commentList = await this.prisma.binh_luan.findMany({});
-    return {
-      message: 'All comment loaded successful',
-      data: { commentList },
-    };
+    try {
+      const commentList = await this.prisma.binh_luan.findMany({});
+      return ResponseData(
+        HttpStatus.OK,
+        Message.COMMENT.LIST_ALL_SUCCESS,
+        commentList,
+      );
+    } catch (error) {
+      throw new Error(`${Message.COMMENT.FAIL} ${error.message}`);
+    }
   }
 
   async postNewComment(dto: CommentDto) {
-    const comment = await this.prisma.binh_luan.create({
-      data: dto,
-    });
-    return {
-      message: 'New comment created successfully',
-      data: { comment },
-    };
+    try {
+      const comment = await this.prisma.binh_luan.create({
+        data: dto,
+      });
+
+      return ResponseData(
+        HttpStatus.OK,
+        Message.COMMENT.POST_COMMENT_SUCCESS,
+        comment,
+      );
+    } catch (error) {
+      throw new Error(`${Message.COMMENT.FAIL} ${error.message}`);
+    }
   }
 
   async updateComment(id: number, dto: CommentDto) {
-    const comment = await this.prisma.binh_luan.update({
-      where: {
-        id,
-      },
-      data: dto,
-    });
-    return {
-      message: 'Comment updated successful',
-      data: { comment },
-    };
+    try {
+      const comment = await this.prisma.binh_luan.update({
+        where: { id },
+        data: dto,
+      });
+      return ResponseData(
+        HttpStatus.OK,
+        Message.COMMENT.UPDATED_COMMENT_SUCCESS,
+        comment,
+      );
+    } catch (error) {
+      throw new Error(`${Message.COMMENT.FAIL} ${error.message}`);
+    }
   }
 
   async deleteComment(id: number) {
-    let checkAvailable = await this.prisma.binh_luan.findUnique({
-      where: { id },
-    });
-    if (!checkAvailable)
-      throw new ForbiddenException('No comment match your request');
-    const comment = await this.prisma.binh_luan.delete({
-      where: {
-        id,
-      },
-    });
-    return {
-      message: 'Delete comment successful',
-      data: { comment },
-    };
+    try {
+      let checkAvailable = await this.prisma.binh_luan.findUnique({
+        where: { id },
+      });
+      if (!checkAvailable) {
+        return ResponseData(
+          HttpStatus.NOT_FOUND,
+          Message.COMMENT.NOT_FOUND,
+          null,
+        );
+      }
+      const comment = await this.prisma.binh_luan.delete({
+        where: { id },
+      });
+      return ResponseData(
+        HttpStatus.OK,
+        Message.COMMENT.DELETED_COMMENT_SUCCESS,
+        comment,
+      );
+    } catch (error) {
+      throw new Error(`${Message.COMMENT.FAIL} ${error.message}`);
+    }
   }
 
   async getCommentListByRoom(ma_phong: number) {
-    const commentListByRoom = await this.prisma.binh_luan.findMany({
-      where: { ma_phong },
-    });
-    if (commentListByRoom.length === 0)
-      throw new ForbiddenException('No booking Schedule match your request');
-    return {
-      message: 'All Comment List By Room loaded successful',
-      data: { commentListByRoom },
-      ma_phong,
-    };
+    try {
+      const commentListByRoom = await this.prisma.binh_luan.findMany({
+        where: { ma_phong },
+      });
+      if (commentListByRoom.length === 0) {
+        return ResponseData(
+          HttpStatus.NOT_FOUND,
+          Message.COMMENT.NOT_FOUND,
+          null,
+        );
+      }
+      return ResponseData(
+        HttpStatus.OK,
+        Message.COMMENT.GET_COMMENT_SUCCESS,
+        commentListByRoom,
+      );
+    } catch (error) {
+      throw new Error(`${Message.COMMENT.FAIL} ${error.message}`);
+    }
   }
 }
