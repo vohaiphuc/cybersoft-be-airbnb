@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { BookingService } from './booking.service';
 import { BookingController } from './booking.controller';
+import { BookingService } from './booking.service';
 
 @Module({
   controllers: [BookingController],
-  providers: [BookingService],
+  providers: [BookingService]
 })
 export class BookingModule {}
