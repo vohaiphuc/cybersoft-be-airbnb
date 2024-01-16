@@ -53,6 +53,12 @@ export class UserService {
     }
 
     async deleteUserById(id: number) {
+        const user = await this.prisma.nguoi_dung.findUnique({
+            where: { id }
+        })
+        if (!user) {
+            throw new HttpException(Message.USER.NOT_FOUND, HttpStatus.BAD_REQUEST)
+        }
         await this.prisma.nguoi_dung.delete({
             where: { id }
         })
@@ -154,6 +160,4 @@ export class UserService {
         })
         return ResponseData(HttpStatus.OK, Message.USER.SUCCESS, users)
     }
-
-    async updateUserAvatar() { }
 }

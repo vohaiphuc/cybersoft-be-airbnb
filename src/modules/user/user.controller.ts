@@ -1,15 +1,10 @@
-import { Body, Controller, Delete, Get, HttpException, Param, ParseIntPipe, Post, Put, Query, Req, UseFilters, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, Param, ParseIntPipe, Post, Put, Query, UseFilters } from '@nestjs/common';
 import { UserService } from './user.service';
-import { JwtAuthGuard } from '../auth/auth.guard';
 import { HttpExceptionFilter } from 'src/filters/http-exception.fitler';
-import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
+import { ApiTags } from '@nestjs/swagger';
 import { AdminJwtGuard, JwtGuard } from 'src/decorators/jwt-guard.decorator';
 import { User } from 'src/decorators/user.decorator';
-import { Request } from 'express';
-import { AdminJwtAuthGuard } from './user.guard';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { CustomValidationPipe } from 'src/pipes/validation.pipe';
 import { I_Data_Token } from '../auth/dto/token-auth.dto';
 
@@ -77,9 +72,4 @@ export class UserController {
   ) {
     return this.userService.getUsersByName(name)
   }
-
-  // @Post("upload-avatar")
-  // updateUserAvatar() {
-  //   return this.userService.updateUserAvatar()
-  // }
 }

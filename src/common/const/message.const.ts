@@ -52,11 +52,11 @@ export const Message = {
     NOT_FOUND: 'Không tìm thấy người dùng',
     UPDATE_INFO_SUCCESS: 'Cập nhật thông tin tài khoản thành công',
     UPDATE_INFO_FAIL_UNAUTHORIZED:
-      'Cập nhật thất bại, vai trò không được phép truy cập tài nguyên',
+      'Cập nhật thất bại, không đủ quyền hạn để thực hiện tác vụ này',
     UPDATE_PASSWORD_SUCCESS: 'Thay đổi mật khẩu thành công',
     UPDATE_PASSWORD_FAIL_INCORRECT: 'Thay đổi mật khẩu thất bại',
     UPDATE_AVATAR_SUCCESS: 'Thay đổi ảnh đại diện thành công',
-    UNAUTHORIZED: 'Vai trò không được phép truy cập tài nguyên',
+    UNAUTHORIZED: 'Không đủ quyền hạn để thực hiện tác vụ này',
     DELETE_SUCCESS: 'Xóa tài khoản thành công',
     FAIL_PAGEINDEX: 'PageIndex vượt quá số trang có thể có',
   },
