@@ -36,7 +36,7 @@ export class BookingService {
       return ResponseData(
         HttpStatus.UNAUTHORIZED,
         Message.COMMENT.UNAUTHORIZED,
-        null,
+        '',
       );
     }
     return ResponseData(
