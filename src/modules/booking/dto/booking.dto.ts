@@ -1,23 +1,35 @@
-import { IsDateString, IsInt, IsNotEmpty, IsNumber } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsDateString, IsInt, IsNotEmpty } from 'class-validator';
+import {
+  IsDateAfterCheckinDay,
+  IsDateAfterToday,
+} from 'src/decorators/booking.decorator';
 
 export class BookingDto {
-  @IsInt({ message: 'Room code must be a valid integer' })
-  @IsNotEmpty({ message: 'Room code is required' })
+  @ApiProperty()
+  @IsInt({ message: 'Mã phòng phải là số nguyên hợp lệ' })
+  @IsNotEmpty({ message: 'Mã phòng không được để trống' })
   ma_phong: number;
 
+  @ApiProperty()
   @IsDateString()
-  @IsNotEmpty({ message: 'Check-in date is required' })
-  ngay_den: string;
+  @IsNotEmpty({ message: 'Ngày đến không được để trống' })
+  @IsDateAfterToday()
+  ngay_den: Date;
 
+  @ApiProperty()
   @IsDateString()
-  @IsNotEmpty({ message: 'Check-out date is required' })
-  ngay_di: string;
+  @IsNotEmpty({ message: 'Ngày đi không được để trống' })
+  @IsDateAfterCheckinDay()
+  ngay_di: Date;
 
-  @IsInt({ message: 'Number of guests must be a valid integer' })
-  @IsNotEmpty({ message: 'Number of guests is required' })
+  @ApiProperty()
+  @IsInt({ message: 'Số lượng khách phải là số nguyên hợp lệ' })
+  @IsNotEmpty({ message: 'Số lượng khách không được để trống' })
   so_luong_khach: number;
 
-  @IsInt({ message: 'User code must be a valid integer' })
-  @IsNotEmpty({ message: 'User code is required' })
+  @ApiProperty()
+  @IsInt({ message: 'Mã người đặt phòng phải là số nguyên hợp lệ' })
+  @IsNotEmpty({ message: 'Mã người đặt phòng không được để trống' })
   ma_nguoi_dat: number;
 }

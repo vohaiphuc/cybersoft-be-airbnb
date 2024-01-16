@@ -1,22 +1,18 @@
-import { IsDateString, IsInt, IsNotEmpty, IsNumber } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsInt, IsNotEmpty } from 'class-validator';
 
 export class CommentDto {
-  @IsInt({ message: 'Room code must be a valid integer' })
-  @IsNotEmpty({ message: 'Room code is required' })
+  @ApiProperty()
+  @IsInt({ message: 'Dữ liệu không hợp lệ' })
+  @IsNotEmpty({ message: 'Dữ liệu không được để trống' })
   ma_phong: number;
 
-  @IsInt({ message: 'User code must be a valid integer' })
-  @IsNotEmpty({ message: 'Check-in date is required' })
-  ma_nguoi_binh_luan: number;
-
-  @IsDateString()
-  @IsNotEmpty({ message: 'Check-out date is required' })
-  ngay_binh_luan: string;
-
-  @IsNotEmpty({ message: 'comment is required' })
+  @ApiProperty()
+  @IsNotEmpty({ message: 'Dữ liệu không được để trống' })
   noi_dung: string;
 
-  @IsInt({ message: 'Star comment must be a valid integer' })
-  @IsNotEmpty({ message: 'Star comment is required' })
+  @ApiProperty()
+  @IsInt({ message: 'Dữ liệu không hợp lệ' })
+  @IsNotEmpty({ message: 'Dữ liệu không được để trống' })
   sao_binh_luan: number;
 }
