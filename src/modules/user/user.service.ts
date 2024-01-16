@@ -56,10 +56,42 @@ export class UserService {
         await this.prisma.nguoi_dung.delete({
             where: { id }
         })
-        return ResponseData(HttpStatus.OK, Message.USER.DELETE_SUCESS, "")
+        return ResponseData(HttpStatus.OK, Message.USER.DELETE_SUCCESS, "")
     }
 
-    async getAllUsersPagination() { }
+    async getAllUsersPagination(pageIndex: number, pageSize: number, name: string) {
+        const users = await this.prisma.nguoi_dung.findMany({
+            where: {
+                name: {
+                    contains: name
+                }
+            },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                phone: true,
+                birth_day: true,
+                gender: true,
+                role: true,
+            }
+        })
+        if (!users) { return ResponseData(HttpStatus.OK, Message.USER.SUCCESS, "") }
+        const pageCount = Math.ceil(users.length / pageSize)
+        if (pageIndex > pageCount) {
+            throw new HttpException(Message.USER.FAIL_PAGEINDEX, HttpStatus.BAD_REQUEST)
+        }
+        const start = (pageIndex - 1) * pageSize
+        const end = start + +pageSize
+        const result = []
+        for (var i = start; i < end; i++) {
+            if (!users[i]) {
+                break
+            }
+            result.push(users[i])
+        }
+        return ResponseData(HttpStatus.OK, Message.USER.SUCCESS, result)
+    }
 
     async getUserById(id: number) {
         const user = await this.prisma.nguoi_dung.findUnique({

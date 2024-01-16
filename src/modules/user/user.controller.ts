@@ -43,8 +43,12 @@ export class UserController {
 
   @AdminJwtGuard
   @Get("phan-trang-tim-kiem")
-  getAllUsersPagination() {
-    return this.userService.getAllUsersPagination()
+  getAllUsersPagination(
+    @Query('pageIndex') pageIndex: number,
+    @Query('pageSize') pageSize: number,
+    @Query('TenNguoiDung') name: string,
+  ) {
+    return this.userService.getAllUsersPagination(pageIndex, pageSize, name)
   }
 
   @AdminJwtGuard
@@ -74,8 +78,8 @@ export class UserController {
     return this.userService.getUsersByName(name)
   }
 
-  @Post("upload-avatar")
-  updateUserAvatar() {
-    return this.userService.updateUserAvatar()
-  }
+  // @Post("upload-avatar")
+  // updateUserAvatar() {
+  //   return this.userService.updateUserAvatar()
+  // }
 }

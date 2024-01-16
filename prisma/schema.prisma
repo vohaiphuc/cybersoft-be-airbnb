@@ -67,7 +67,7 @@ model phong {
   bep       Boolean?    @default(false)
   do_xe     Boolean?    @default(false)
   ho_boi    Boolean?    @default(false)
-  hinh_anh  String      @db.VarChar(255)
+  hinh_anh  String?     @db.VarChar(255)
   vi_tri_id Int?
   binh_luan binh_luan[]
   dat_phong dat_phong[]
@@ -80,7 +80,7 @@ model phong {
 model vi_tri {
   id         Int     @id @default(autoincrement())
   ten_vi_tri String  @db.VarChar(255)
-  hinh_anh   String  @db.VarChar(255)
+  hinh_anh   String? @db.VarChar(255)
   tinh_thanh String  @db.VarChar(255)
   quoc_gia   String  @db.VarChar(255)
   phong      phong[]
