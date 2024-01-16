@@ -13,6 +13,8 @@ import {
   UseInterceptors,
   UseFilters,
   HttpStatus,
+  ParseFilePipe,
+  FileTypeValidator,
 } from '@nestjs/common';
 import { RoomService } from './room.service';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
@@ -141,6 +143,9 @@ export class RoomController {
         filename: (_, file, callback) =>
           callback(null, new Date().getTime() + '_' + file.originalname),
       }),
+      limits: {
+        files: 1,
+      },
     }),
   )
   @ApiConsumes('multipart/form-data')
@@ -160,7 +165,16 @@ export class RoomController {
       }),
     )
     roomId: string,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new FileTypeValidator({
+            fileType: '.(png|jpeg|jpg|gif|bmp|tiff|webp|svg)',
+          }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
   ) {
     return this.roomService.uploadRoomImage(+roomId, file);
   }

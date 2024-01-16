@@ -13,6 +13,8 @@ import {
   UploadedFile,
   UseFilters,
   UseInterceptors,
+  ParseFilePipe,
+  FileTypeValidator,
 } from '@nestjs/common';
 import { LocationService } from './location.service';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
@@ -125,6 +127,9 @@ export class LocationController {
         filename: (_, file, callback) =>
           callback(null, new Date().getTime() + '_' + file.originalname),
       }),
+      limits: {
+        files: 1,
+      },
     }),
   )
   @ApiConsumes('multipart/form-data')
@@ -144,7 +149,16 @@ export class LocationController {
       }),
     )
     locationId: string,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new FileTypeValidator({
+            fileType: '.(png|jpeg|jpg|gif|bmp|tiff|webp|svg)',
+          }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
   ) {
     return this.locationService.uploadLocationImage(+locationId, file);
   }

@@ -32,7 +32,7 @@ export class RoomService {
       where: { id: locationId },
     });
     if (!viTri) {
-      return ResponseData(HttpStatus.NOT_FOUND, Message.LOCATION.NOT_FOUND, '');
+      return ResponseData(HttpStatus.NOT_FOUND, Message.LOCATION.NOT_FOUND, []);
     }
     const roomByLocationId = await this.prisma.phong.findMany({
       where: {
@@ -81,7 +81,7 @@ export class RoomService {
       where: { id: updateRoomDto.vi_tri_id },
     });
     if (!viTri) {
-      return ResponseData(HttpStatus.NOT_FOUND, Message.LOCATION.NOT_FOUND, []);
+      return ResponseData(HttpStatus.NOT_FOUND, Message.LOCATION.NOT_FOUND, '');
     }
     await this.prisma.phong.update({
       where: { id },
@@ -97,13 +97,25 @@ export class RoomService {
     if (!room) {
       return ResponseData(HttpStatus.NOT_FOUND, Message.ROOM.NOT_FOUND, '');
     }
+    const bookedRoom = await this.prisma.dat_phong.findFirst({
+      where: {
+        ma_phong: id,
+      },
+    });
+    if (bookedRoom) {
+      return ResponseData(
+        HttpStatus.BAD_REQUEST,
+        'Phòng đã được đặt, không thể xóa!',
+        '',
+      );
+    }
     await this.prisma.phong.delete({
       where: { id },
     });
     return ResponseData(HttpStatus.OK, Message.ROOM.DELETE_SUCESS, '');
   }
 
-  async uploadRoomImage(id, file: Express.Multer.File) {
+  async uploadRoomImage(id: number, file: Express.Multer.File) {
     if (!file) {
       return ResponseData(HttpStatus.BAD_REQUEST, Message.IMAGE.NOT_FOUND, '');
     }

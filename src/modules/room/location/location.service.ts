@@ -80,13 +80,23 @@ export class LocationService {
     if (!viTri) {
       return ResponseData(HttpStatus.NOT_FOUND, Message.LOCATION.NOT_FOUND, '');
     }
+    const usedLocation = await this.prisma.phong.findFirst({
+      where: { vi_tri_id: id },
+    });
+    if (usedLocation) {
+      return ResponseData(
+        HttpStatus.BAD_REQUEST,
+        'Có phòng đã sử dụng vị trí này nên không thể xóa!',
+        '',
+      );
+    }
     await this.prisma.vi_tri.delete({
       where: { id },
     });
     return ResponseData(HttpStatus.OK, Message.LOCATION.DELETE_SUCESS, '');
   }
 
-  async uploadLocationImage(id, file: Express.Multer.File) {
+  async uploadLocationImage(id: number, file: Express.Multer.File) {
     if (!file) {
       return ResponseData(HttpStatus.BAD_REQUEST, Message.IMAGE.NOT_FOUND, '');
     }
