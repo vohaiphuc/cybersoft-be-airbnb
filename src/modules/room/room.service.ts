@@ -27,7 +27,7 @@ export class RoomService {
     return ResponseData(HttpStatus.OK, Message.ROOM.CREATE_ROOM_SUCCESS, '');
   }
 
-  async getRoomByLocationId(locationId) {
+  async getRoomByLocationId(locationId: number) {
     const viTri = await this.prisma.vi_tri.findUnique({
       where: { id: locationId },
     });
@@ -46,7 +46,18 @@ export class RoomService {
     );
   }
 
-  async getAllRoomsPagination(pageIndex, pageSize, keyword) {
+  async getAllRoomsPagination(
+    pageIndex: number,
+    pageSize: number,
+    keyword: string,
+  ) {
+    if (pageIndex <= 0 || pageSize <= 0) {
+      return ResponseData(
+        HttpStatus.BAD_REQUEST,
+        'Page index và Page size đều phải lớn hơn 0!',
+        [],
+      );
+    }
     const roomListPagination = await this.prisma.phong.findMany({
       where: {
         ten_phong: {

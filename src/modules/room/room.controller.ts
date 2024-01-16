@@ -66,8 +66,30 @@ export class RoomController {
 
   @Get('pagination-search')
   getAllRoomsPagination(
-    @Query('pageIndex') pageIndex: string,
-    @Query('pageSize') pageSize: string,
+    @Query(
+      'pageIndex',
+      new ParseIntPipe({
+        exceptionFactory: () => {
+          throw new HttpException(
+            'Input không hợp lệ. Vui lòng kiểm tra pageIndex và pageSize!',
+            HttpStatus.BAD_REQUEST,
+          );
+        },
+      }),
+    )
+    pageIndex: string,
+    @Query(
+      'pageSize',
+      new ParseIntPipe({
+        exceptionFactory: () => {
+          throw new HttpException(
+            'Input không hợp lệ. Vui lòng kiểm tra pageIndex và pageSize!',
+            HttpStatus.BAD_REQUEST,
+          );
+        },
+      }),
+    )
+    pageSize: string,
     @Query('keyword') keyword: string,
   ) {
     return this.roomService.getAllRoomsPagination(

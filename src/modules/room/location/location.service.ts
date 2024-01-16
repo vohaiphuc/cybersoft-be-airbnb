@@ -25,7 +25,18 @@ export class LocationService {
     );
   }
 
-  async getAllLocationsPagination(pageIndex, pageSize, keyword) {
+  async getAllLocationsPagination(
+    pageIndex: number,
+    pageSize: number,
+    keyword: string,
+  ) {
+    if (pageIndex <= 0 || pageSize <= 0) {
+      return ResponseData(
+        HttpStatus.BAD_REQUEST,
+        'Page index và Page size đều phải lớn hơn 0!',
+        [],
+      );
+    }
     const locationListPagination = await this.prisma.vi_tri.findMany({
       where: {
         ten_vi_tri: {
