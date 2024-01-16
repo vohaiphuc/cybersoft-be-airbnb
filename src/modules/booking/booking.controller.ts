@@ -28,7 +28,10 @@ export class BookingController {
 
   @JwtGuard
   @Get(':id')
-  getBookingSchedule(@User('data') data: I_Data_Token, @Param() id: number) {
+  getBookingSchedule(
+    @User('data') data: I_Data_Token, 
+    @Param('id', new IsValidIdType()) id: number
+  ) {
     const { email } = data;
     return this.bookingService.getBookingSchedule(id, email);
   }
@@ -47,7 +50,6 @@ export class BookingController {
     @User('data') data: I_Data_Token,
     @Body(CustomValidationPipe) dto: BookingDto,
     ) {
-    console.log("dto: ", dto);
     const { email } = data;
     return this.bookingService.postNewBookingSchedule(dto, email);
   }
