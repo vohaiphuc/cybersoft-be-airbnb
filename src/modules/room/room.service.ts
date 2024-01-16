@@ -81,7 +81,7 @@ export class RoomService {
       where: { id: updateRoomDto.vi_tri_id },
     });
     if (!viTri) {
-      return ResponseData(HttpStatus.NOT_FOUND, Message.LOCATION.NOT_FOUND, '');
+      return ResponseData(HttpStatus.NOT_FOUND, Message.LOCATION.NOT_FOUND, []);
     }
     await this.prisma.phong.update({
       where: { id },
@@ -120,6 +120,6 @@ export class RoomService {
       data: { hinh_anh: file.filename },
     });
 
-    return ResponseData(HttpStatus.OK, Message.IMAGE.SAVED, '');
+    return ResponseData(HttpStatus.OK, Message.IMAGE.UPLOAD_SUCCESS, '');
   }
 }
