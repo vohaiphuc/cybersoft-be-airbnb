@@ -11,8 +11,26 @@ export const Message = {
     EMAIL_FAIL: 'Email đã tồn tại',
   },
   COMMENT: {
-    LIST_ALL: 'Danh sách bình luận',
-    SUCCESS: 'Đã bình luận',
+    LIST_ALL_SUCCESS: 'Lấy thành công danh sách tất cả bình luận!',
+    GET_COMMENT_SUCCESS: 'Lấy thành công nội dung bình luận!',
+    POST_COMMENT_SUCCESS: 'Thêm bình luận thành công!',
+    UPDATED_COMMENT_SUCCESS: 'Cập nhật bình luận thành công!',
+    DELETED_COMMENT_SUCCESS: 'Xóa bình luận thành công!',
+    FAIL: 'Đã có lỗi xảy ra, vui lòng thử lại: ',
+    UNAUTHORIZED: 'Không đủ quyền hạn để thực hiện tác vụ này',
+    NOT_FOUND: 'Nội dung bình luận không tồn tại hoặc đã bị xóa!',
+  },
+  BOOKING: {
+    LIST_ALL_SUCCESS: 'Lấy thành công danh sách tất cả lịch đặt phòng!',
+    GET_BOOKING_SUCCESS: 'Lấy thành công nội dung lịch đặt phòng!',
+    GET_BOOKING_BY_USER_SUCCESS:
+      'Lấy thành công nội dung lịch đặt phòng theo người dùng!',
+    POST_BOOKING_SUCCESS: 'Thêm lịch đặt phòng thành công!',
+    UPDATED_BOOKING_SUCCESS: 'Cập nhật lịch đặt phòng thành công!',
+    DELETED_BOOKING_SUCCESS: 'Xóa lịch đặt phòng thành công!',
+    FAIL: 'Đã có lỗi xảy ra, vui lòng thử lại: ',
+    NOT_FOUND: 'Nội dung lịch đặt phòng không tồn tại hoặc đã bị xóa!',
+    UNAUTHORIZED: 'Không đủ quyền hạn để thực hiện tác vụ này',
   },
   IMAGE: {
     LIST_ALL: 'Danh sách tất cả hình ảnh',
@@ -40,7 +58,6 @@ export const Message = {
     UPDATE_AVATAR_SUCCESS: 'Thay đổi ảnh đại diện thành công',
     UNAUTHORIZED: 'Vai trò không được phép truy cập tài nguyên',
     DELETE_SUCESS: 'Xóa tài khoản thành công',
-    DELETE_SUCCESS: 'Xóa tài khoản thành công',
     FAIL_PAGEINDEX: 'PageIndex vượt quá số trang có thể có',
   },
   LOCATION: {
