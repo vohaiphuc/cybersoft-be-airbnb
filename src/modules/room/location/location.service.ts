@@ -103,6 +103,6 @@ export class LocationService {
       data: { hinh_anh: file.filename },
     });
 
-    return ResponseData(HttpStatus.OK, Message.IMAGE.SAVED, '');
+    return ResponseData(HttpStatus.OK, Message.IMAGE.UPLOAD_SUCCESS, '');
   }
 }
