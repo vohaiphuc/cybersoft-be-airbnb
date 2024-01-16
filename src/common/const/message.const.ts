@@ -57,7 +57,7 @@ export const Message = {
     UPDATE_PASSWORD_FAIL_INCORRECT: 'Thay đổi mật khẩu thất bại',
     UPDATE_AVATAR_SUCCESS: 'Thay đổi ảnh đại diện thành công',
     UNAUTHORIZED: 'Vai trò không được phép truy cập tài nguyên',
-    DELETE_SUCESS: 'Xóa tài khoản thành công',
+    DELETE_SUCCESS: 'Xóa tài khoản thành công',
     FAIL_PAGEINDEX: 'PageIndex vượt quá số trang có thể có',
   },
   LOCATION: {
