@@ -18,7 +18,10 @@ import {
 } from '@nestjs/common';
 import { RoomService } from './room.service';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
-import { CustomValidationPipe, IsValidIdType } from 'src/pipes/validation.pipe';
+import {
+  CustomValidationPipe,
+  CustomParseIntPipe,
+} from 'src/pipes/validation.pipe';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { HttpExceptionFilter } from 'src/filters/http-exception.fitler';
@@ -47,7 +50,7 @@ export class RoomController {
 
   @Get('get-room-by-location-id')
   getRoomByLocationId(
-    @Query('locationId', new IsValidIdType())
+    @Query('locationId', new CustomParseIntPipe())
     locationId: string,
   ) {
     return this.roomService.getRoomByLocationId(+locationId);
@@ -90,7 +93,7 @@ export class RoomController {
 
   @Get(':id')
   getRoomById(
-    @Param('id', new IsValidIdType())
+    @Param('id', new CustomParseIntPipe())
     id: number,
   ) {
     return this.roomService.getRoomById(id);
@@ -100,7 +103,7 @@ export class RoomController {
   @Put(':id')
   updateRoomById(
     @Body(CustomValidationPipe) updateRoomDto: UpdateRoomDto,
-    @Param('id', new IsValidIdType())
+    @Param('id', new CustomParseIntPipe())
     id: number,
   ) {
     return this.roomService.updateRoomById(id, updateRoomDto);
@@ -109,7 +112,7 @@ export class RoomController {
   @AdminJwtGuard
   @Delete(':id')
   deleteRoomById(
-    @Param('id', new IsValidIdType())
+    @Param('id', new CustomParseIntPipe())
     id: number,
   ) {
     return this.roomService.deleteRoomById(id);
@@ -134,7 +137,7 @@ export class RoomController {
     type: UploadRoomImageDto,
   })
   uploadRoomImage(
-    @Query('roomId', new IsValidIdType())
+    @Query('roomId', new CustomParseIntPipe())
     roomId: string,
     @UploadedFile(
       new ParseFilePipe({
