@@ -20,13 +20,12 @@ import { LocationService } from './location.service';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { HttpExceptionFilter } from 'src/filters/http-exception.fitler';
 import { CreateLocationDto } from './dto/create-location.dto';
-import { CustomValidationPipe } from 'src/pipes/validation.pipe';
+import { CustomValidationPipe, IsValidIdType } from 'src/pipes/validation.pipe';
 import { UpdateLocationDto } from './dto/update-location.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { UploadLocationImageDto } from './dto/upload-location-image.dto';
 import { AdminJwtGuard } from 'src/decorators/jwt-guard.decorator';
-import { Message } from 'src/common/const/message.const';
 
 @ApiTags('Location')
 @Controller('/api/locations')
@@ -85,17 +84,7 @@ export class LocationController {
 
   @Get(':id')
   getLocationById(
-    @Param(
-      'id',
-      new ParseIntPipe({
-        exceptionFactory: () => {
-          throw new HttpException(
-            Message.REQUEST.ID_ERROR,
-            HttpStatus.BAD_REQUEST,
-          );
-        },
-      }),
-    )
+    @Param('id', new IsValidIdType())
     id: number,
   ) {
     return this.locationService.getLocationById(id);
@@ -105,17 +94,7 @@ export class LocationController {
   @Put(':id')
   updateLocationById(
     @Body(CustomValidationPipe) updateLocationDto: UpdateLocationDto,
-    @Param(
-      'id',
-      new ParseIntPipe({
-        exceptionFactory: () => {
-          throw new HttpException(
-            Message.REQUEST.ID_ERROR,
-            HttpStatus.BAD_REQUEST,
-          );
-        },
-      }),
-    )
+    @Param('id', new IsValidIdType())
     id: number,
   ) {
     return this.locationService.updateLocationById(id, updateLocationDto);
@@ -124,17 +103,7 @@ export class LocationController {
   @AdminJwtGuard
   @Delete(':id')
   deleteLocationById(
-    @Param(
-      'id',
-      new ParseIntPipe({
-        exceptionFactory: () => {
-          throw new HttpException(
-            Message.REQUEST.ID_ERROR,
-            HttpStatus.BAD_REQUEST,
-          );
-        },
-      }),
-    )
+    @Param('id', new IsValidIdType())
     id: number,
   ) {
     return this.locationService.deleteLocationById(id);
@@ -159,17 +128,7 @@ export class LocationController {
     type: UploadLocationImageDto,
   })
   uploadLocationImage(
-    @Query(
-      'locationId',
-      new ParseIntPipe({
-        exceptionFactory: () => {
-          throw new HttpException(
-            Message.REQUEST.ID_ERROR,
-            HttpStatus.BAD_REQUEST,
-          );
-        },
-      }),
-    )
+    @Query('locationId', new IsValidIdType())
     locationId: string,
     @UploadedFile(
       new ParseFilePipe({

@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable, HttpException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { Message } from 'src/common/const/message.const';
 import { ResponseData } from 'src/common/util/response.utils';
@@ -58,7 +58,7 @@ export class LocationService {
       where: { id },
     });
     if (!viTri) {
-      return ResponseData(HttpStatus.NOT_FOUND, Message.LOCATION.NOT_FOUND, '');
+      throw new HttpException(Message.LOCATION.NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     const location = await this.prisma.vi_tri.findUnique({
       where: { id },
@@ -71,7 +71,7 @@ export class LocationService {
       where: { id },
     });
     if (!viTri) {
-      return ResponseData(HttpStatus.NOT_FOUND, Message.LOCATION.NOT_FOUND, '');
+      throw new HttpException(Message.LOCATION.NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     await this.prisma.vi_tri.update({
       where: { id },
@@ -89,7 +89,7 @@ export class LocationService {
       where: { id },
     });
     if (!viTri) {
-      return ResponseData(HttpStatus.NOT_FOUND, Message.LOCATION.NOT_FOUND, '');
+      throw new HttpException(Message.LOCATION.NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     const usedLocation = await this.prisma.phong.findFirst({
       where: { vi_tri_id: id },
@@ -109,13 +109,13 @@ export class LocationService {
 
   async uploadLocationImage(id: number, file: Express.Multer.File) {
     if (!file) {
-      return ResponseData(HttpStatus.BAD_REQUEST, Message.IMAGE.NOT_FOUND, '');
+      throw new HttpException(Message.IMAGE.NOT_FOUND, HttpStatus.BAD_REQUEST);
     }
     const viTri = await this.prisma.vi_tri.findUnique({
       where: { id },
     });
     if (!viTri) {
-      return ResponseData(HttpStatus.NOT_FOUND, Message.LOCATION.NOT_FOUND, '');
+      throw new HttpException(Message.LOCATION.NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     await this.prisma.vi_tri.update({
       where: {
