@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsInt, IsNotEmpty } from 'class-validator';
+import { IsDateString, IsInt, IsNotEmpty, IsPositive, MinDate } from 'class-validator';
 import {
   IsDateAfterCheckinDay,
   IsDateAfterToday,
@@ -9,6 +9,7 @@ export class BookingDto {
   @ApiProperty()
   @IsInt({ message: 'Mã phòng phải là số nguyên hợp lệ' })
   @IsNotEmpty({ message: 'Mã phòng không được để trống' })
+  @IsPositive({ message: 'Dữ liệu không được bé hơn 1' })
   ma_phong: number;
 
   @ApiProperty()
@@ -26,10 +27,6 @@ export class BookingDto {
   @ApiProperty()
   @IsInt({ message: 'Số lượng khách phải là số nguyên hợp lệ' })
   @IsNotEmpty({ message: 'Số lượng khách không được để trống' })
+  @IsPositive({ message: 'Dữ liệu không được bé hơn 1' })
   so_luong_khach: number;
-
-  @ApiProperty()
-  @IsInt({ message: 'Mã người đặt phòng phải là số nguyên hợp lệ' })
-  @IsNotEmpty({ message: 'Mã người đặt phòng không được để trống' })
-  ma_nguoi_dat: number;
 }

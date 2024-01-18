@@ -13,7 +13,7 @@ import { BookingDto } from './dto/booking.dto';
 import { AdminJwtGuard, JwtGuard } from 'src/decorators/jwt-guard.decorator';
 import { User } from 'src/decorators/user.decorator';
 import { I_Data_Token } from '../auth/dto/token-auth.dto';
-import { CustomValidationPipe, IsValidIdType } from 'src/pipes/validation.pipe';
+import { CustomValidationPipe, CustomParseIntPipe } from 'src/pipes/validation.pipe';
 
 @ApiTags('Booking')
 @Controller('api/dat-phong')
@@ -30,7 +30,7 @@ export class BookingController {
   @Get(':id')
   getBookingSchedule(
     @User('data') data: I_Data_Token, 
-    @Param('id', new IsValidIdType()) id: number
+    @Param('id', new CustomParseIntPipe()) id: number
   ) {
     const { email } = data;
     return this.bookingService.getBookingSchedule(id, email);
@@ -39,7 +39,7 @@ export class BookingController {
   @AdminJwtGuard
   @Get('lay-theo-nguoi-dung/:ma_nguoi_dat')
   async getBookingListByUser(
-    @Param('ma_nguoi_dat', new IsValidIdType()) ma_nguoi_dat: number,
+    @Param('ma_nguoi_dat', new CustomParseIntPipe()) ma_nguoi_dat: number,
   ) {
     return this.bookingService.getBookingListByUser(ma_nguoi_dat);
   }
@@ -58,7 +58,7 @@ export class BookingController {
   @Put(':id')
   updateBookingSchedule(
     @User('data') data: I_Data_Token,
-    @Param('id', new IsValidIdType()) id: number,
+    @Param('id', new CustomParseIntPipe()) id: number,
     @Body(CustomValidationPipe) dto: BookingDto,
   ) {
     const { email } = data;
@@ -69,7 +69,7 @@ export class BookingController {
   @Delete(':id')
   deleteBookingSchedule(
     @User('data') data: I_Data_Token,
-    @Param('id', new IsValidIdType()) id: number,
+    @Param('id', new CustomParseIntPipe()) id: number,
   ) {
     const { email } = data;
     return this.bookingService.deleteBookingSchedule(id, email);

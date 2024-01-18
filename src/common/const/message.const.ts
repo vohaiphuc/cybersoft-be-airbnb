@@ -26,6 +26,7 @@ export const Message = {
     GET_BY_USER_SUCCESS:
       'Lấy thành công nội dung lịch đặt phòng theo người dùng!',
     POST_SUCCESS: 'Thêm lịch đặt phòng thành công!',
+    DOUBLE_BOOKED: 'Lịch đặt phòng bị trùng!',
     UPDATED_SUCCESS: 'Cập nhật lịch đặt phòng thành công!',
     DELETED_SUCCESS: 'Xóa lịch đặt phòng thành công!',
     FAIL: 'Đã có lỗi xảy ra, vui lòng thử lại: ',

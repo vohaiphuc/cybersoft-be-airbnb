@@ -32,7 +32,7 @@ export class CustomValidationPipe implements PipeTransform<any> {
   }
 }
 
-export class IsValidIdType {
+export class CustomParseIntPipe {
   transform(value: string): number {
     const id = parseInt(value, 10);
 
