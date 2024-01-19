@@ -50,7 +50,7 @@ export class RoomController {
 
   @Get('get-room-by-location-id')
   getRoomByLocationId(
-    @Query('locationId', new CustomParseIntPipe())
+    @Query('locationId', new CustomParseIntPipe('locationId'))
     locationId: string,
   ) {
     return this.roomService.getRoomByLocationId(+locationId);
@@ -58,29 +58,9 @@ export class RoomController {
 
   @Get('pagination-search')
   getAllRoomsPagination(
-    @Query(
-      'pageIndex',
-      new ParseIntPipe({
-        exceptionFactory: () => {
-          throw new HttpException(
-            'Input không hợp lệ. Vui lòng kiểm tra pageIndex và pageSize!',
-            HttpStatus.BAD_REQUEST,
-          );
-        },
-      }),
-    )
+    @Query('pageIndex', new CustomParseIntPipe('pageIndex'))
     pageIndex: string,
-    @Query(
-      'pageSize',
-      new ParseIntPipe({
-        exceptionFactory: () => {
-          throw new HttpException(
-            'Input không hợp lệ. Vui lòng kiểm tra pageIndex và pageSize!',
-            HttpStatus.BAD_REQUEST,
-          );
-        },
-      }),
-    )
+    @Query('pageSize', new CustomParseIntPipe('pageSize'))
     pageSize: string,
     @Query('keyword') keyword: string,
   ) {
@@ -93,7 +73,7 @@ export class RoomController {
 
   @Get(':id')
   getRoomById(
-    @Param('id', new CustomParseIntPipe())
+    @Param('id', new CustomParseIntPipe('id'))
     id: number,
   ) {
     return this.roomService.getRoomById(id);
@@ -103,7 +83,7 @@ export class RoomController {
   @Put(':id')
   updateRoomById(
     @Body(CustomValidationPipe) updateRoomDto: UpdateRoomDto,
-    @Param('id', new CustomParseIntPipe())
+    @Param('id', new CustomParseIntPipe('id'))
     id: number,
   ) {
     return this.roomService.updateRoomById(id, updateRoomDto);
@@ -112,7 +92,7 @@ export class RoomController {
   @AdminJwtGuard
   @Delete(':id')
   deleteRoomById(
-    @Param('id', new CustomParseIntPipe())
+    @Param('id', new CustomParseIntPipe('id'))
     id: number,
   ) {
     return this.roomService.deleteRoomById(id);
@@ -137,7 +117,7 @@ export class RoomController {
     type: UploadRoomImageDto,
   })
   uploadRoomImage(
-    @Query('roomId', new CustomParseIntPipe())
+    @Query('roomId', new CustomParseIntPipe('roomId'))
     roomId: string,
     @UploadedFile(
       new ParseFilePipe({

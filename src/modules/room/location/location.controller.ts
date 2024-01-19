@@ -52,29 +52,9 @@ export class LocationController {
 
   @Get('pagination-search')
   getAllLocationsPagination(
-    @Query(
-      'pageIndex',
-      new ParseIntPipe({
-        exceptionFactory: () => {
-          throw new HttpException(
-            'Input không hợp lệ. Vui lòng kiểm tra pageIndex và pageSize!',
-            HttpStatus.BAD_REQUEST,
-          );
-        },
-      }),
-    )
+    @Query('pageIndex', new CustomParseIntPipe('pageIndex'))
     pageIndex: string,
-    @Query(
-      'pageSize',
-      new ParseIntPipe({
-        exceptionFactory: () => {
-          throw new HttpException(
-            'Input không hợp lệ. Vui lòng kiểm tra pageIndex và pageSize!',
-            HttpStatus.BAD_REQUEST,
-          );
-        },
-      }),
-    )
+    @Query('pageSize', new CustomParseIntPipe('pageSize'))
     pageSize: string,
     @Query('keyword') keyword: string,
   ) {
@@ -87,7 +67,7 @@ export class LocationController {
 
   @Get(':id')
   getLocationById(
-    @Param('id', new CustomParseIntPipe())
+    @Param('id', new CustomParseIntPipe('id'))
     id: number,
   ) {
     return this.locationService.getLocationById(id);
@@ -97,7 +77,7 @@ export class LocationController {
   @Put(':id')
   updateLocationById(
     @Body(CustomValidationPipe) updateLocationDto: UpdateLocationDto,
-    @Param('id', new CustomParseIntPipe())
+    @Param('id', new CustomParseIntPipe('id'))
     id: number,
   ) {
     return this.locationService.updateLocationById(id, updateLocationDto);
@@ -106,7 +86,7 @@ export class LocationController {
   @AdminJwtGuard
   @Delete(':id')
   deleteLocationById(
-    @Param('id', new CustomParseIntPipe())
+    @Param('id', new CustomParseIntPipe('id'))
     id: number,
   ) {
     return this.locationService.deleteLocationById(id);
@@ -131,7 +111,7 @@ export class LocationController {
     type: UploadLocationImageDto,
   })
   uploadLocationImage(
-    @Query('locationId', new CustomParseIntPipe())
+    @Query('locationId', new CustomParseIntPipe('locationId'))
     locationId: string,
     @UploadedFile(
       new ParseFilePipe({

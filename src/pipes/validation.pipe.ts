@@ -32,12 +32,18 @@ export class CustomValidationPipe implements PipeTransform<any> {
   }
 }
 
-export class CustomParseIntPipe {
+export class CustomParseIntPipe implements PipeTransform<string, number> {
+  private readonly paramName: string;
+
+  constructor(paramName: string) {
+    this.paramName = paramName;
+  }
+
   transform(value: string): number {
     const id = parseInt(value, 10);
 
     if (isNaN(id) || id <= 0) {
-      throw new BadRequestException('ID không hợp lệ');
+      throw new BadRequestException(`${this.paramName} không hợp lệ`);
     }
 
     return id;
