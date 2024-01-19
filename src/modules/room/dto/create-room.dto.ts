@@ -5,6 +5,7 @@ import {
   IsNumber,
   IsPositive,
   IsString,
+  Max,
   Min,
 } from 'class-validator';
 
@@ -40,6 +41,7 @@ export class CreateRoomDto {
   @ApiProperty()
   @IsNumber()
   @Min(0)
+  @Max(1e9)
   gia_tien: number;
 
   @ApiProperty()
