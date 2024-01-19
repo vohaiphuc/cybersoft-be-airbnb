@@ -25,9 +25,7 @@ export class BookingService {
     const user = await this.userService.verifyUser(email);
 
     const bookingSchedule = await this.prisma.dat_phong.findUnique({
-      where: {
-        id,
-      },
+      where: { id },
     });
 
     if (user.role === Role.USER && user.id !== bookingSchedule.ma_nguoi_dat)
@@ -67,18 +65,22 @@ export class BookingService {
     });
 
     let isBookingValid = true;
+
     bookingList.forEach((item) => {
       const dateCheckIn = new Date(dto.ngay_den);
       const dateCheckOut = new Date(dto.ngay_di);
+
       if (!(dateCheckOut < item.ngay_den || item.ngay_di < dateCheckIn)) {
         isBookingValid = false;
       }
     });
+
     if (!isBookingValid)
       throw new HttpException(
         Message.BOOKING.DOUBLE_BOOKED,
         HttpStatus.BAD_REQUEST,
       );
+
     await this.prisma.dat_phong.create({
       data: { ...dto, ma_nguoi_dat: user.id },
     });
@@ -88,45 +90,45 @@ export class BookingService {
 
   async updateBookingSchedule(id: number, dto: BookingDto, email: string) {
     const user = await this.userService.verifyUser(email);
+
     const oldSchedule = await this.prisma.dat_phong.findUnique({
-      where: {
-        id,
-      },
+      where: { id },
     });
 
     if (!oldSchedule) {
       throw new HttpException(Message.BOOKING.NOT_FOUND, HttpStatus.NOT_FOUND);
     }
+
     if (user.role === Role.USER && user.id !== oldSchedule.ma_nguoi_dat) {
       throw new HttpException(Message.BOOKING.FORBIDDEN, HttpStatus.FORBIDDEN);
     }
+
     const bookingList = await this.prisma.dat_phong.findMany({
       where: { ma_phong: dto.ma_phong },
     });
 
     let isBookingValid = true;
+
     bookingList.forEach((item) => {
       const dateCheckInInput = new Date(dto.ngay_den);
       const dateCheckOutInput = new Date(dto.ngay_di);
-      if (id !== item.id) {
-        if (
-          !(
-            dateCheckOutInput < item.ngay_den || item.ngay_di < dateCheckInInput
-          )
-        ) {
-          isBookingValid = false;
-        }
+
+      if (
+        id !== item.id &&
+        !(dateCheckOutInput < item.ngay_den || item.ngay_di < dateCheckInInput)
+      ) {
+        isBookingValid = false;
       }
     });
+
     if (!isBookingValid)
       throw new HttpException(
         Message.BOOKING.DOUBLE_BOOKED,
         HttpStatus.BAD_REQUEST,
       );
+
     await this.prisma.dat_phong.update({
-      where: {
-        id,
-      },
+      where: { id },
       data: dto,
     });
 
@@ -148,10 +150,9 @@ export class BookingService {
       throw new HttpException(Message.BOOKING.FORBIDDEN, HttpStatus.FORBIDDEN);
 
     await this.prisma.dat_phong.delete({
-      where: {
-        id,
-      },
+      where: { id },
     });
+
     return ResponseData(HttpStatus.OK, Message.BOOKING.DELETED_SUCCESS, '');
   }
 }

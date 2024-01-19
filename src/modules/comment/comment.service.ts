@@ -13,6 +13,7 @@ export class CommentService {
 
   async getCommentList() {
     const commentList = await this.prisma.binh_luan.findMany({});
+
     return ResponseData(
       HttpStatus.OK,
       Message.COMMENT.LIST_ALL_SUCCESS,
@@ -24,11 +25,14 @@ export class CommentService {
     const isRoomValid = await this.prisma.phong.findUnique({
       where: { id: ma_phong },
     });
+
     if (!isRoomValid)
       throw new HttpException(Message.ROOM.NOT_FOUND, HttpStatus.NOT_FOUND);
+
     const commentListByRoom = await this.prisma.binh_luan.findMany({
       where: { ma_phong },
     });
+
     return ResponseData(
       HttpStatus.OK,
       Message.COMMENT.GET_SUCCESS,
@@ -71,6 +75,7 @@ export class CommentService {
       where: { id },
       data: dto,
     });
+
     return ResponseData(HttpStatus.OK, Message.COMMENT.UPDATED_SUCCESS, '');
   }
 
@@ -80,6 +85,7 @@ export class CommentService {
     const comment = await this.prisma.binh_luan.findUnique({
       where: { id },
     });
+
     if (!comment)
       throw new HttpException(Message.COMMENT.NOT_FOUND, HttpStatus.NOT_FOUND);
 
@@ -89,6 +95,7 @@ export class CommentService {
     await this.prisma.binh_luan.delete({
       where: { id },
     });
+
     return ResponseData(HttpStatus.OK, Message.COMMENT.DELETED_SUCCESS, '');
   }
 }
