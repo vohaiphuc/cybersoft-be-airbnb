@@ -69,6 +69,7 @@ export const Message = {
     CREATE_LOCATION_SUCCESS: 'Tạo vị trí thành công',
     UPDATE_LOCATION_SUCCESS: 'Cập nhật thông tin vị trí thành công',
     DELETE_SUCESS: 'Xóa vị trí thành công',
+    DELETE_FAIL: 'Có phòng đã sử dụng vị trí này nên không thể xóa',
   },
   ROOM: {
     SUCCESS: 'Lấy thông tin phòng thành công',
@@ -79,6 +80,7 @@ export const Message = {
     CREATE_ROOM_SUCCESS: 'Tạo phòng thành công',
     UPDATE_ROOM_SUCCESS: 'Cập nhật thông tin phòng thành công',
     DELETE_SUCESS: 'Xóa phòng thành công',
+    DELETE_FAIL: 'Phòng đã được đặt, không thể xóa',
   },
   REQUEST: {
     ID_ERROR: 'ID không hợp lệ',

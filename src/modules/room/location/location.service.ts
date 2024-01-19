@@ -30,13 +30,6 @@ export class LocationService {
     pageSize: number,
     keyword: string,
   ) {
-    if (pageIndex <= 0 || pageSize <= 0) {
-      return ResponseData(
-        HttpStatus.BAD_REQUEST,
-        'Page index và Page size đều phải lớn hơn 0!',
-        [],
-      );
-    }
     const locationListPagination = await this.prisma.vi_tri.findMany({
       where: {
         ten_vi_tri: {
@@ -54,23 +47,20 @@ export class LocationService {
   }
 
   async getLocationById(id: number) {
-    const viTri = await this.prisma.vi_tri.findUnique({
-      where: { id },
-    });
-    if (!viTri) {
-      throw new HttpException(Message.LOCATION.NOT_FOUND, HttpStatus.NOT_FOUND);
-    }
     const location = await this.prisma.vi_tri.findUnique({
       where: { id },
     });
+    if (!location) {
+      throw new HttpException(Message.LOCATION.NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
     return ResponseData(200, Message.LOCATION.SUCCESS_ID, location);
   }
 
   async updateLocationById(id: number, updateLocationDto: UpdateLocationDto) {
-    const viTri = await this.prisma.vi_tri.findUnique({
+    const location = await this.prisma.vi_tri.findUnique({
       where: { id },
     });
-    if (!viTri) {
+    if (!location) {
       throw new HttpException(Message.LOCATION.NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     await this.prisma.vi_tri.update({
@@ -85,10 +75,10 @@ export class LocationService {
   }
 
   async deleteLocationById(id: number) {
-    const viTri = await this.prisma.vi_tri.findUnique({
+    const location = await this.prisma.vi_tri.findUnique({
       where: { id },
     });
-    if (!viTri) {
+    if (!location) {
       throw new HttpException(Message.LOCATION.NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     const usedLocation = await this.prisma.phong.findFirst({
@@ -97,7 +87,7 @@ export class LocationService {
     if (usedLocation) {
       return ResponseData(
         HttpStatus.BAD_REQUEST,
-        'Có phòng đã sử dụng vị trí này nên không thể xóa!',
+        Message.LOCATION.DELETE_FAIL,
         '',
       );
     }
@@ -111,10 +101,10 @@ export class LocationService {
     if (!file) {
       throw new HttpException(Message.IMAGE.NOT_FOUND, HttpStatus.BAD_REQUEST);
     }
-    const viTri = await this.prisma.vi_tri.findUnique({
+    const location = await this.prisma.vi_tri.findUnique({
       where: { id },
     });
-    if (!viTri) {
+    if (!location) {
       throw new HttpException(Message.LOCATION.NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     await this.prisma.vi_tri.update({

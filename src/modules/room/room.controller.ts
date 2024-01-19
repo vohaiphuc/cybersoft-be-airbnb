@@ -48,24 +48,20 @@ export class RoomController {
   @Get('get-room-by-location-id')
   getRoomByLocationId(
     @Query('locationId', new CustomParseIntPipe('locationId'))
-    locationId: string,
+    locationId: number,
   ) {
-    return this.roomService.getRoomByLocationId(+locationId);
+    return this.roomService.getRoomByLocationId(locationId);
   }
 
   @Get('pagination-search')
   getAllRoomsPagination(
     @Query('pageIndex', new CustomParseIntPipe('pageIndex'))
-    pageIndex: string,
+    pageIndex: number,
     @Query('pageSize', new CustomParseIntPipe('pageSize'))
-    pageSize: string,
+    pageSize: number,
     @Query('keyword') keyword: string,
   ) {
-    return this.roomService.getAllRoomsPagination(
-      +pageIndex,
-      +pageSize,
-      keyword,
-    );
+    return this.roomService.getAllRoomsPagination(pageIndex, pageSize, keyword);
   }
 
   @Get(':id')
@@ -115,7 +111,7 @@ export class RoomController {
   })
   uploadRoomImage(
     @Query('roomId', new CustomParseIntPipe('roomId'))
-    roomId: string,
+    roomId: number,
     @UploadedFile(
       new ParseFilePipe({
         validators: [
@@ -127,6 +123,6 @@ export class RoomController {
     )
     file: Express.Multer.File,
   ) {
-    return this.roomService.uploadRoomImage(+roomId, file);
+    return this.roomService.uploadRoomImage(roomId, file);
   }
 }
