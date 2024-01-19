@@ -57,7 +57,7 @@ export class CommentService {
   async updateComment(id: number, dto: CommentDto, email: string) {
     const user = await this.userService.verifyUser(email);
     const userRole = user.role;
-    const { ADMIN, USER } = Role;
+    const { USER } = Role;
     const oldComment = await this.prisma.binh_luan.findUnique({
       where: { id },
     });
@@ -80,9 +80,9 @@ export class CommentService {
   async deleteComment(id: number, email: string) {
     const checkUser = await this.userService.verifyUser(email);
     const checkUserRole = checkUser.role;
-    const { ADMIN, USER } = Role;
+    const { USER } = Role;
 
-    let comment = await this.prisma.binh_luan.findUnique({
+    const comment = await this.prisma.binh_luan.findUnique({
       where: { id },
     });
     if (!comment)

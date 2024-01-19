@@ -24,7 +24,7 @@ export class BookingService {
   async getBookingSchedule(id: number, email: string) {
     const user = await this.userService.verifyUser(email);
     const userRole = user.role;
-    const { ADMIN, USER } = Role;
+    const { USER } = Role;
 
     const bookingSchedule = await this.prisma.dat_phong.findUnique({
       where: {
@@ -94,7 +94,7 @@ export class BookingService {
   async updateBookingSchedule(id: number, dto: BookingDto, email: string) {
     const user = await this.userService.verifyUser(email);
     const userRole = user.role;
-    const { ADMIN, USER } = Role;
+    const { USER } = Role;
     const oldSchedule = await this.prisma.dat_phong.findUnique({
       where: {
         id,
@@ -146,9 +146,9 @@ export class BookingService {
   async deleteBookingSchedule(id: number, email: string) {
     const user = await this.userService.verifyUser(email);
     const userRole = user.role;
-    const { ADMIN, USER } = Role;
+    const { USER } = Role;
 
-    let oldSchedule = await this.prisma.dat_phong.findUnique({
+    const oldSchedule = await this.prisma.dat_phong.findUnique({
       where: { id },
     });
 
