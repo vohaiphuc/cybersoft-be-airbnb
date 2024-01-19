@@ -25,7 +25,7 @@ export class CommentService {
       where: { id: ma_phong },
     });
     if (!isRoomValid)
-      return ResponseData(HttpStatus.OK, Message.ROOM.NOT_FOUND, '');
+      return ResponseData(HttpStatus.NOT_FOUND, Message.ROOM.NOT_FOUND, '');
     const commentListByRoom = await this.prisma.binh_luan.findMany({
       where: { ma_phong },
     });
