@@ -18,11 +18,7 @@ export class LocationService {
     await this.prisma.vi_tri.create({
       data: createLocationDto,
     });
-    return ResponseData(
-      HttpStatus.OK,
-      Message.LOCATION.CREATE_LOCATION_SUCCESS,
-      '',
-    );
+    return ResponseData(HttpStatus.OK, Message.LOCATION.CREATE_SUCCESS, '');
   }
 
   async getAllLocationsPagination(
@@ -67,11 +63,7 @@ export class LocationService {
       where: { id },
       data: updateLocationDto,
     });
-    return ResponseData(
-      HttpStatus.OK,
-      Message.LOCATION.UPDATE_LOCATION_SUCCESS,
-      '',
-    );
+    return ResponseData(HttpStatus.OK, Message.LOCATION.UPDATE_SUCCESS, '');
   }
 
   async deleteLocationById(id: number) {

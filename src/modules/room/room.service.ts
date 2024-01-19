@@ -24,7 +24,7 @@ export class RoomService {
     await this.prisma.phong.create({
       data: createRoomDto,
     });
-    return ResponseData(HttpStatus.OK, Message.ROOM.CREATE_ROOM_SUCCESS, '');
+    return ResponseData(HttpStatus.OK, Message.ROOM.CREATE_SUCCESS, '');
   }
 
   async getRoomByLocationId(locationId: number) {
@@ -91,7 +91,7 @@ export class RoomService {
       where: { id },
       data: updateRoomDto,
     });
-    return ResponseData(HttpStatus.OK, Message.ROOM.UPDATE_ROOM_SUCCESS, '');
+    return ResponseData(HttpStatus.OK, Message.ROOM.UPDATE_SUCCESS, '');
   }
 
   async deleteRoomById(id: number) {
