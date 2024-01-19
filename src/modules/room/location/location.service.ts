@@ -77,10 +77,9 @@ export class LocationService {
       where: { vi_tri_id: id },
     });
     if (usedLocation) {
-      return ResponseData(
-        HttpStatus.BAD_REQUEST,
+      throw new HttpException(
         Message.LOCATION.DELETE_FAIL,
-        '',
+        HttpStatus.BAD_REQUEST,
       );
     }
     await this.prisma.vi_tri.delete({
