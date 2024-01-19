@@ -56,19 +56,16 @@ export class CommentService {
 
   async updateComment(id: number, dto: CommentDto, email: string) {
     const user = await this.userService.verifyUser(email);
-    const userRole = user.role;
-    const { USER } = Role;
+
     const oldComment = await this.prisma.binh_luan.findUnique({
       where: { id },
     });
+
     if (!oldComment)
       throw new HttpException(Message.COMMENT.NOT_FOUND, HttpStatus.NOT_FOUND);
 
-    if (userRole === USER && user.id !== oldComment.ma_nguoi_binh_luan)
-      throw new HttpException(
-        Message.COMMENT.FORBIDDEN,
-        HttpStatus.FORBIDDEN,
-      );
+    if (user.role === Role.USER && user.id !== oldComment.ma_nguoi_binh_luan)
+      throw new HttpException(Message.COMMENT.FORBIDDEN, HttpStatus.FORBIDDEN);
 
     await this.prisma.binh_luan.update({
       where: { id },
@@ -78,9 +75,7 @@ export class CommentService {
   }
 
   async deleteComment(id: number, email: string) {
-    const checkUser = await this.userService.verifyUser(email);
-    const checkUserRole = checkUser.role;
-    const { USER } = Role;
+    const user = await this.userService.verifyUser(email);
 
     const comment = await this.prisma.binh_luan.findUnique({
       where: { id },
@@ -88,11 +83,8 @@ export class CommentService {
     if (!comment)
       throw new HttpException(Message.COMMENT.NOT_FOUND, HttpStatus.NOT_FOUND);
 
-    if (checkUserRole === USER && checkUser.id !== comment.ma_nguoi_binh_luan)
-      throw new HttpException(
-        Message.COMMENT.FORBIDDEN,
-        HttpStatus.FORBIDDEN,
-      );
+    if (user.role === Role.USER && user.id !== comment.ma_nguoi_binh_luan)
+      throw new HttpException(Message.COMMENT.FORBIDDEN, HttpStatus.FORBIDDEN);
 
     await this.prisma.binh_luan.delete({
       where: { id },
