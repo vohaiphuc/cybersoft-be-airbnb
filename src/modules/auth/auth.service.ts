@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { PrismaClient, nguoi_dung } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { Message } from 'src/common/const/message.const';
 import { ResponseData } from 'src/common/util/response.utils';
 import * as brcypt from 'bcrypt'
@@ -8,7 +8,6 @@ import { JwtService } from '@nestjs/jwt';
 import { Role, SignUpDto } from './dto/auth.dto';
 import { I_Data_Token } from './dto/token-auth.dto';
 import { USER_SELECTED_COLUMN } from 'src/common/const/prisma.const';
-import { CreateUserDto } from '../user/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
