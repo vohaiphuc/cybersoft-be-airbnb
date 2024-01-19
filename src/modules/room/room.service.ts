@@ -71,7 +71,7 @@ export class RoomService {
     const room = await this.prisma.phong.findUnique({
       where: { id },
     });
-    return ResponseData(200, Message.ROOM.SUCCESS_ID, room);
+    return ResponseData(HttpStatus.OK, Message.ROOM.SUCCESS_ID, room);
   }
 
   async updateRoomById(id: number, updateRoomDto: UpdateRoomDto) {

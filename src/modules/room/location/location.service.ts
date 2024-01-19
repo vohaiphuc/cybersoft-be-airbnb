@@ -49,7 +49,7 @@ export class LocationService {
     if (!location) {
       throw new HttpException(Message.LOCATION.NOT_FOUND, HttpStatus.NOT_FOUND);
     }
-    return ResponseData(200, Message.LOCATION.SUCCESS_ID, location);
+    return ResponseData(HttpStatus.OK, Message.LOCATION.SUCCESS_ID, location);
   }
 
   async updateLocationById(id: number, updateLocationDto: UpdateLocationDto) {
