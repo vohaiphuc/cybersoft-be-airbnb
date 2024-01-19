@@ -5,6 +5,7 @@ import {
   IsNumber,
   IsPositive,
   IsString,
+  Min,
 } from 'class-validator';
 
 export class CreateRoomDto {
@@ -38,7 +39,7 @@ export class CreateRoomDto {
 
   @ApiProperty()
   @IsNumber()
-  @IsPositive()
+  @Min(0)
   gia_tien: number;
 
   @ApiProperty()
