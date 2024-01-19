@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsInt, IsNotEmpty, IsPositive, MinDate } from 'class-validator';
+import { IsDateString, IsInt, IsNotEmpty, IsPositive } from 'class-validator';
 import {
   IsDateAfterCheckinDay,
   IsDateAfterToday,
