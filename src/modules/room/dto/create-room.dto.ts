@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
   IsInt,
+  IsNotEmpty,
   IsNumber,
   IsPositive,
   IsString,
@@ -12,6 +13,7 @@ import {
 export class CreateRoomDto {
   @ApiProperty()
   @IsString()
+  @IsNotEmpty({ message: 'Tên phòng không được để trống' })
   ten_phong: string;
 
   @ApiProperty()
@@ -36,6 +38,7 @@ export class CreateRoomDto {
 
   @ApiProperty()
   @IsString()
+  @IsNotEmpty({ message: 'Mô tả không được để trống' })
   mo_ta: string;
 
   @ApiProperty()
