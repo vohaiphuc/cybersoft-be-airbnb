@@ -109,7 +109,7 @@ export class LocationController {
   })
   uploadLocationImage(
     @Query('locationId', new CustomParseIntPipe('locationId'))
-    locationId: string,
+    locationId: number,
     @UploadedFile(
       new ParseFilePipe({
         validators: [
@@ -121,6 +121,6 @@ export class LocationController {
     )
     file: Express.Multer.File,
   ) {
-    return this.locationService.uploadLocationImage(+locationId, file);
+    return this.locationService.uploadLocationImage(locationId, file);
   }
 }

@@ -107,11 +107,7 @@ export class RoomService {
       },
     });
     if (bookedRoom) {
-      return ResponseData(
-        HttpStatus.BAD_REQUEST,
-        'Phòng đã được đặt, không thể xóa!',
-        '',
-      );
+      return ResponseData(HttpStatus.BAD_REQUEST, Message.ROOM.DELETE_FAIL, '');
     }
     await this.prisma.phong.delete({
       where: { id },

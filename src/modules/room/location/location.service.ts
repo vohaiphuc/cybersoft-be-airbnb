@@ -87,7 +87,7 @@ export class LocationService {
     if (usedLocation) {
       return ResponseData(
         HttpStatus.BAD_REQUEST,
-        'Có phòng đã sử dụng vị trí này nên không thể xóa!',
+        Message.LOCATION.DELETE_FAIL,
         '',
       );
     }
