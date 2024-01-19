@@ -50,14 +50,14 @@ export class LocationController {
   @Get('pagination-search')
   getAllLocationsPagination(
     @Query('pageIndex', new CustomParseIntPipe('pageIndex'))
-    pageIndex: string,
+    pageIndex: number,
     @Query('pageSize', new CustomParseIntPipe('pageSize'))
-    pageSize: string,
+    pageSize: number,
     @Query('keyword') keyword: string,
   ) {
     return this.locationService.getAllLocationsPagination(
-      +pageIndex,
-      +pageSize,
+      pageIndex,
+      pageSize,
       keyword,
     );
   }

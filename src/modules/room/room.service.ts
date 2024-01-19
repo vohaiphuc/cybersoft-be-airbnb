@@ -15,10 +15,10 @@ export class RoomService {
   }
 
   async createRoom(createRoomDto: CreateRoomDto) {
-    const viTri = await this.prisma.vi_tri.findUnique({
+    const location = await this.prisma.vi_tri.findUnique({
       where: { id: createRoomDto.vi_tri_id },
     });
-    if (!viTri) {
+    if (!location) {
       throw new HttpException(Message.LOCATION.NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     await this.prisma.phong.create({
@@ -28,10 +28,10 @@ export class RoomService {
   }
 
   async getRoomByLocationId(locationId: number) {
-    const viTri = await this.prisma.vi_tri.findUnique({
+    const location = await this.prisma.vi_tri.findUnique({
       where: { id: locationId },
     });
-    if (!viTri) {
+    if (!location) {
       throw new HttpException(Message.LOCATION.NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     const roomByLocationId = await this.prisma.phong.findMany({
@@ -51,13 +51,6 @@ export class RoomService {
     pageSize: number,
     keyword: string,
   ) {
-    if (pageIndex <= 0 || pageSize <= 0) {
-      return ResponseData(
-        HttpStatus.BAD_REQUEST,
-        'Page index và Page size đều phải lớn hơn 0!',
-        [],
-      );
-    }
     const roomListPagination = await this.prisma.phong.findMany({
       where: {
         ten_phong: {
@@ -88,10 +81,10 @@ export class RoomService {
     if (!room) {
       throw new HttpException(Message.ROOM.NOT_FOUND, HttpStatus.NOT_FOUND);
     }
-    const viTri = await this.prisma.vi_tri.findUnique({
+    const location = await this.prisma.vi_tri.findUnique({
       where: { id: updateRoomDto.vi_tri_id },
     });
-    if (!viTri) {
+    if (!location) {
       throw new HttpException(Message.LOCATION.NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     await this.prisma.phong.update({

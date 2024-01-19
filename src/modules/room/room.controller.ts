@@ -56,16 +56,12 @@ export class RoomController {
   @Get('pagination-search')
   getAllRoomsPagination(
     @Query('pageIndex', new CustomParseIntPipe('pageIndex'))
-    pageIndex: string,
+    pageIndex: number,
     @Query('pageSize', new CustomParseIntPipe('pageSize'))
-    pageSize: string,
+    pageSize: number,
     @Query('keyword') keyword: string,
   ) {
-    return this.roomService.getAllRoomsPagination(
-      +pageIndex,
-      +pageSize,
-      keyword,
-    );
+    return this.roomService.getAllRoomsPagination(pageIndex, pageSize, keyword);
   }
 
   @Get(':id')
