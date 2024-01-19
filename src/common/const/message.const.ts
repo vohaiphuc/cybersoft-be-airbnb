@@ -17,7 +17,7 @@ export const Message = {
     UPDATED_SUCCESS: 'Cập nhật bình luận thành công!',
     DELETED_SUCCESS: 'Xóa bình luận thành công!',
     FAIL: 'Đã có lỗi xảy ra, vui lòng thử lại: ',
-    UNAUTHORIZED: 'Không đủ quyền hạn để thực hiện tác vụ này',
+    FORBIDDEN: 'Không đủ quyền hạn để thực hiện tác vụ này',
     NOT_FOUND: 'Nội dung bình luận không tồn tại hoặc đã bị xóa!',
   },
   BOOKING: {
@@ -31,7 +31,7 @@ export const Message = {
     DELETED_SUCCESS: 'Xóa lịch đặt phòng thành công!',
     FAIL: 'Đã có lỗi xảy ra, vui lòng thử lại: ',
     NOT_FOUND: 'Nội dung lịch đặt phòng không tồn tại hoặc đã bị xóa!',
-    UNAUTHORIZED: 'Không đủ quyền hạn để thực hiện tác vụ này',
+    FORBIDDEN: 'Không đủ quyền hạn để thực hiện tác vụ này',
   },
   IMAGE: {
     LIST_ALL: 'Danh sách tất cả hình ảnh',

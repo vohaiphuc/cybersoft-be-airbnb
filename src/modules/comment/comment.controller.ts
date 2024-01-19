@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  UseFilters,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CommentService } from './comment.service';
@@ -17,8 +18,10 @@ import {
   CustomValidationPipe,
   CustomParseIntPipe,
 } from 'src/pipes/validation.pipe';
+import { HttpExceptionFilter } from 'src/filters/http-exception.fitler';
 
 @ApiTags('Comment')
+@UseFilters(HttpExceptionFilter)
 @Controller('api/binh-luan')
 export class CommentController {
   constructor(private commentService: CommentService) {}

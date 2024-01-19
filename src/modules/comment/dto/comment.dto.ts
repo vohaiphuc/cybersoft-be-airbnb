@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsIn, IsInt, IsNotEmpty, IsPositive } from 'class-validator';
+import { IsIn, IsInt, IsNotEmpty, IsPositive, IsString } from 'class-validator';
 
 export class CommentDto {
   @ApiProperty()
@@ -9,6 +9,7 @@ export class CommentDto {
   ma_phong: number;
 
   @ApiProperty()
+  @IsString({ message: 'Dữ liệu không hợp lệ' })
   @IsNotEmpty({ message: 'Dữ liệu không được để trống' })
   noi_dung: string;
 

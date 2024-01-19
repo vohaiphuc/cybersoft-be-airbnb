@@ -66,8 +66,8 @@ export class CommentService {
 
     if (userRole === USER && user.id !== oldComment.ma_nguoi_binh_luan)
       throw new HttpException(
-        Message.COMMENT.UNAUTHORIZED,
-        HttpStatus.UNAUTHORIZED,
+        Message.COMMENT.FORBIDDEN,
+        HttpStatus.FORBIDDEN,
       );
 
     await this.prisma.binh_luan.update({
@@ -90,8 +90,8 @@ export class CommentService {
 
     if (checkUserRole === USER && checkUser.id !== comment.ma_nguoi_binh_luan)
       throw new HttpException(
-        Message.COMMENT.UNAUTHORIZED,
-        HttpStatus.UNAUTHORIZED,
+        Message.COMMENT.FORBIDDEN,
+        HttpStatus.FORBIDDEN,
       );
 
     await this.prisma.binh_luan.delete({

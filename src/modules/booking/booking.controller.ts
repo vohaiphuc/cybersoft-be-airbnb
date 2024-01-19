@@ -6,6 +6,7 @@ import {
   Post,
   Put,
   Delete,
+  UseFilters,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { BookingService } from './booking.service';
@@ -17,8 +18,10 @@ import {
   CustomValidationPipe,
   CustomParseIntPipe,
 } from 'src/pipes/validation.pipe';
+import { HttpExceptionFilter } from 'src/filters/http-exception.fitler';
 
 @ApiTags('Booking')
+@UseFilters(HttpExceptionFilter)
 @Controller('api/dat-phong')
 export class BookingController {
   constructor(private bookingService: BookingService) {}

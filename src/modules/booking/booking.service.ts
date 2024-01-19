@@ -34,8 +34,8 @@ export class BookingService {
 
     if (userRole === USER && user.id !== bookingSchedule.ma_nguoi_dat)
       throw new HttpException(
-        Message.BOOKING.UNAUTHORIZED,
-        HttpStatus.UNAUTHORIZED,
+        Message.BOOKING.FORBIDDEN,
+        HttpStatus.FORBIDDEN,
       );
 
     return ResponseData(
@@ -106,8 +106,8 @@ export class BookingService {
     }
     if (userRole === USER && user.id !== oldSchedule.ma_nguoi_dat) {
       throw new HttpException(
-        Message.BOOKING.UNAUTHORIZED,
-        HttpStatus.UNAUTHORIZED,
+        Message.BOOKING.FORBIDDEN,
+        HttpStatus.FORBIDDEN,
       );
     }
     const bookingList = await this.prisma.dat_phong.findMany({
@@ -158,8 +158,8 @@ export class BookingService {
 
     if (userRole === USER && user.id !== oldSchedule.ma_nguoi_dat)
       throw new HttpException(
-        Message.BOOKING.UNAUTHORIZED,
-        HttpStatus.UNAUTHORIZED,
+        Message.BOOKING.FORBIDDEN,
+        HttpStatus.FORBIDDEN,
       );
 
     await this.prisma.dat_phong.delete({
