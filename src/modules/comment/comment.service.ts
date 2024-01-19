@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { Message } from 'src/common/const/message.const';
 import { ResponseData } from 'src/common/util/response.utils';
@@ -25,7 +25,7 @@ export class CommentService {
       where: { id: ma_phong },
     });
     if (!isRoomValid)
-      return ResponseData(HttpStatus.OK, Message.ROOM.NOT_FOUND, '');
+      throw new HttpException(Message.ROOM.NOT_FOUND, HttpStatus.NOT_FOUND);
     const commentListByRoom = await this.prisma.binh_luan.findMany({
       where: { ma_phong },
     });
@@ -43,8 +43,9 @@ export class CommentService {
     const isRoomValid = await this.prisma.phong.findUnique({
       where: { id: dto.ma_phong },
     });
+
     if (!isRoomValid)
-      return ResponseData(HttpStatus.OK, Message.ROOM.NOT_FOUND, '');
+      throw new HttpException(Message.ROOM.NOT_FOUND, HttpStatus.NOT_FOUND);
 
     await this.prisma.binh_luan.create({
       data: { ...dto, ma_nguoi_binh_luan: user.id, ngay_binh_luan },
@@ -61,14 +62,14 @@ export class CommentService {
       where: { id },
     });
     if (!oldComment)
-      return ResponseData(HttpStatus.NOT_FOUND, Message.COMMENT.NOT_FOUND, '');
-    if (userRole === USER && user.id !== oldComment.ma_nguoi_binh_luan) {
-      return ResponseData(
-        HttpStatus.UNAUTHORIZED,
+      throw new HttpException(Message.COMMENT.NOT_FOUND, HttpStatus.NOT_FOUND);
+
+    if (userRole === USER && user.id !== oldComment.ma_nguoi_binh_luan)
+      throw new HttpException(
         Message.COMMENT.UNAUTHORIZED,
-        '',
+        HttpStatus.UNAUTHORIZED,
       );
-    }
+
     await this.prisma.binh_luan.update({
       where: { id },
       data: dto,
@@ -85,14 +86,14 @@ export class CommentService {
       where: { id },
     });
     if (!comment)
-      return ResponseData(HttpStatus.NOT_FOUND, Message.COMMENT.NOT_FOUND, '');
-    if (checkUserRole === USER && checkUser.id !== comment.ma_nguoi_binh_luan) {
-      return ResponseData(
-        HttpStatus.UNAUTHORIZED,
+      throw new HttpException(Message.COMMENT.NOT_FOUND, HttpStatus.NOT_FOUND);
+
+    if (checkUserRole === USER && checkUser.id !== comment.ma_nguoi_binh_luan)
+      throw new HttpException(
         Message.COMMENT.UNAUTHORIZED,
-        '',
+        HttpStatus.UNAUTHORIZED,
       );
-    }
+
     await this.prisma.binh_luan.delete({
       where: { id },
     });

@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { BookingDto } from './dto/booking.dto';
 import { ResponseData } from 'src/common/util/response.utils';
@@ -32,13 +32,12 @@ export class BookingService {
       },
     });
 
-    if (userRole === USER && user.id !== bookingSchedule.ma_nguoi_dat) {
-      return ResponseData(
+    if (userRole === USER && user.id !== bookingSchedule.ma_nguoi_dat)
+      throw new HttpException(
+        Message.BOOKING.UNAUTHORIZED,
         HttpStatus.UNAUTHORIZED,
-        Message.COMMENT.UNAUTHORIZED,
-        '',
       );
-    }
+
     return ResponseData(
       HttpStatus.OK,
       Message.BOOKING.GET_SUCCESS,
@@ -65,7 +64,7 @@ export class BookingService {
       where: { id: dto.ma_phong },
     });
     if (!isRoomValid)
-      return ResponseData(HttpStatus.NOT_FOUND, Message.ROOM.NOT_FOUND, '');
+      throw new HttpException(Message.BOOKING.NOT_FOUND, HttpStatus.NOT_FOUND);
 
     const bookingList = await this.prisma.dat_phong.findMany({
       where: { ma_phong: dto.ma_phong },
@@ -81,10 +80,9 @@ export class BookingService {
       }
     });
     if (!isBookingValid)
-      return ResponseData(
-        HttpStatus.BAD_REQUEST,
+      throw new HttpException(
         Message.BOOKING.DOUBLE_BOOKED,
-        '',
+        HttpStatus.BAD_REQUEST,
       );
     await this.prisma.dat_phong.create({
       data: { ...dto, ma_nguoi_dat: user.id },
@@ -104,13 +102,12 @@ export class BookingService {
     });
 
     if (!oldSchedule) {
-      return ResponseData(HttpStatus.NOT_FOUND, Message.BOOKING.NOT_FOUND, '');
+      throw new HttpException(Message.BOOKING.NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     if (userRole === USER && user.id !== oldSchedule.ma_nguoi_dat) {
-      return ResponseData(
+      throw new HttpException(
+        Message.BOOKING.UNAUTHORIZED,
         HttpStatus.UNAUTHORIZED,
-        Message.COMMENT.UNAUTHORIZED,
-        '',
       );
     }
     const bookingList = await this.prisma.dat_phong.findMany({
@@ -132,12 +129,10 @@ export class BookingService {
       }
     });
     if (!isBookingValid)
-      return ResponseData(
-        HttpStatus.BAD_REQUEST,
+      throw new HttpException(
         Message.BOOKING.DOUBLE_BOOKED,
-        '',
+        HttpStatus.BAD_REQUEST,
       );
-
     await this.prisma.dat_phong.update({
       where: {
         id,
@@ -158,16 +153,14 @@ export class BookingService {
     });
 
     if (!oldSchedule) {
-      return ResponseData(HttpStatus.NOT_FOUND, Message.BOOKING.NOT_FOUND, '');
+      throw new HttpException(Message.BOOKING.NOT_FOUND, HttpStatus.NOT_FOUND);
     }
 
-    if (userRole === USER && user.id !== oldSchedule.ma_nguoi_dat) {
-      return ResponseData(
+    if (userRole === USER && user.id !== oldSchedule.ma_nguoi_dat)
+      throw new HttpException(
+        Message.BOOKING.UNAUTHORIZED,
         HttpStatus.UNAUTHORIZED,
-        Message.COMMENT.UNAUTHORIZED,
-        '',
       );
-    }
 
     await this.prisma.dat_phong.delete({
       where: {
