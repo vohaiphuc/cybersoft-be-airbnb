@@ -1,6 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger"
-import { IsEnum, IsISO8601, IsNumber, IsString } from "class-validator"
-import { Role, SignUpDto } from "src/modules/auth/dto/auth.dto"
+import { IsNumber } from "class-validator"
 import { CreateUserDto } from "./create-user.dto"
 
 const MessageValidation = {

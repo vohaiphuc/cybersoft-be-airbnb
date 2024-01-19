@@ -4,6 +4,7 @@ import {
     UnauthorizedException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { Message } from 'src/common/const/message.const';
 
 @Injectable()
 export class AdminJwtAuthGuard extends AuthGuard('jwt-admin') {
@@ -17,11 +18,11 @@ export class AdminJwtAuthGuard extends AuthGuard('jwt-admin') {
         if (!user && info) {
             switch (info.message) {
                 case "jwt expired":
-                    throw new UnauthorizedException("Token hết hạn")
+                    throw new UnauthorizedException(Message.TOKEN.FAIL_EXPIRED)
                 case "No auth token":
-                    throw new UnauthorizedException("Không có token")
+                    throw new UnauthorizedException(Message.TOKEN.FAIL_MISSING)
                 case "invalid signature":
-                    throw new UnauthorizedException("Token không hợp lệ")
+                    throw new UnauthorizedException(Message.TOKEN.FAIL)
                 default:
                     throw new UnauthorizedException(`${info.name}: ${info.message}`)
             }

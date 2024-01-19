@@ -17,7 +17,7 @@ export class AuthController {
   @Post("signin")
   @ApiBody({ type: SignInDto })
   signIn(
-    @Body() body: SignInDto
+    @Body(CustomValidationPipe) body: SignInDto
   ) {
     const { email, password } = body
     return this.authService.signIn(email, password)
