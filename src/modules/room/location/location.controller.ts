@@ -50,14 +50,14 @@ export class LocationController {
   @Get('pagination-search')
   getAllLocationsPagination(
     @Query('pageIndex', new CustomParseIntPipe('pageIndex'))
-    pageIndex: string,
+    pageIndex: number,
     @Query('pageSize', new CustomParseIntPipe('pageSize'))
-    pageSize: string,
+    pageSize: number,
     @Query('keyword') keyword: string,
   ) {
     return this.locationService.getAllLocationsPagination(
-      +pageIndex,
-      +pageSize,
+      pageIndex,
+      pageSize,
       keyword,
     );
   }
@@ -109,7 +109,7 @@ export class LocationController {
   })
   uploadLocationImage(
     @Query('locationId', new CustomParseIntPipe('locationId'))
-    locationId: string,
+    locationId: number,
     @UploadedFile(
       new ParseFilePipe({
         validators: [
@@ -121,6 +121,6 @@ export class LocationController {
     )
     file: Express.Multer.File,
   ) {
-    return this.locationService.uploadLocationImage(+locationId, file);
+    return this.locationService.uploadLocationImage(locationId, file);
   }
 }
