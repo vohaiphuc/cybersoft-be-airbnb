@@ -25,7 +25,7 @@ export class AuthService {
 
     async refreshAccessToken(email: string, key: number) {
         if (!email || !key) {
-            throw new HttpException(Message.TOKEN.FAIL, 404)
+            throw new HttpException(Message.TOKEN.FAIL, HttpStatus.BAD_REQUEST)
         }
         const user = await this.prisma.nguoi_dung.findFirst({
             where: { email }
@@ -33,7 +33,7 @@ export class AuthService {
         const refreshToken = user.refresh_token
         const decodeRefreshToken = this.jwtService.decode(refreshToken)
         if (decodeRefreshToken.data.key !== key) {
-            throw new HttpException(Message.TOKEN.FAIL_KEY, 404)
+            throw new HttpException(Message.TOKEN.FAIL_KEY, HttpStatus.BAD_REQUEST)
         }
         const newAccessToken = this.createToken({
             email,
@@ -43,14 +43,13 @@ export class AuthService {
     }
 
     async signIn(email: string, password: string) {
-        if (!email) { throw new HttpException(Message.LOGIN.EMAIL_FAIL, 404) }
+        if (!email) { throw new HttpException(Message.LOGIN.EMAIL_FAIL, HttpStatus.BAD_REQUEST) }
         const user = await this.prisma.nguoi_dung.findFirst({
             where: { email }
         })
         if (!user) {
             throw new HttpException(Message.LOGIN.EMAIL_FAIL, HttpStatus.BAD_GATEWAY)
         }
-        // check password
         if (!brcypt.compareSync(password, user.password)) {
             throw new HttpException(Message.LOGIN.PW_FAIL, HttpStatus.BAD_GATEWAY)
         }
@@ -78,7 +77,7 @@ export class AuthService {
     async signUp(requestBody: SignUpDto, role: Role) {
         const { name, email, password, phone, birth_day, gender } = requestBody
         if (!email) {
-            throw new HttpException(Message.LOGIN.EMAIL_FAIL, 404)
+            throw new HttpException(Message.LOGIN.EMAIL_FAIL, HttpStatus.BAD_REQUEST)
         }
         const user = await this.prisma.nguoi_dung.findFirst({
             where: { email }

@@ -1,4 +1,4 @@
-import { ExtractJwt, Strategy, StrategyOptions } from 'passport-jwt';
+import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -30,9 +30,8 @@ export class AdminJwtStrategy extends PassportStrategy(Strategy, "jwt-admin") {
             throw new HttpException(Message.USER.NOT_FOUND, HttpStatus.BAD_REQUEST)
         }
         if (user.role !== 'ADMIN') {
-            throw new HttpException(Message.USER.UNAUTHORIZED, HttpStatus.BAD_REQUEST)
+            throw new HttpException(Message.USER.UNAUTHORIZED, HttpStatus.FORBIDDEN)
         }
         return payload
-        // return { email: payload.data.email, key: payload.data.key };
     }
 }

@@ -5,7 +5,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { AdminJwtGuard, JwtGuard } from 'src/decorators/jwt-guard.decorator';
 import { User } from 'src/decorators/user.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
-import { CustomValidationPipe, IsValidIdType } from 'src/pipes/validation.pipe';
+import { CustomParseIntPipe, CustomValidationPipe } from 'src/pipes/validation.pipe';
 import { I_Data_Token } from '../auth/dto/token-auth.dto';
 
 @ApiTags("User")
@@ -31,7 +31,7 @@ export class UserController {
   @AdminJwtGuard
   @Delete(":id")
   deleteUserById(
-    @Param('id', IsValidIdType) id: number
+    @Param('id', new CustomParseIntPipe('ID')) id: number
   ) {
     return this.userService.deleteUserById(id)
   }
@@ -39,8 +39,8 @@ export class UserController {
   @AdminJwtGuard
   @Get("phan-trang-tim-kiem")
   getAllUsersPagination(
-    @Query('pageIndex', IsValidIdType) pageIndex: number,
-    @Query('pageSize', IsValidIdType) pageSize: number,
+    @Query('pageIndex', new CustomParseIntPipe('PageIndex')) pageIndex: number,
+    @Query('pageSize', new CustomParseIntPipe('PageSize')) pageSize: number,
     @Query('TenNguoiDung') name: string,
   ) {
     return this.userService.getAllUsersPagination(pageIndex, pageSize, name)
@@ -49,7 +49,7 @@ export class UserController {
   @AdminJwtGuard
   @Get(":id")
   getUserById(
-    @Param('id', IsValidIdType) id: number
+    @Param('id', new CustomParseIntPipe('ID')) id: number
   ) {
     return this.userService.getUserById(id)
   }
@@ -59,7 +59,7 @@ export class UserController {
   updateUserById(
     @User('data') data: I_Data_Token,
     @Body(CustomValidationPipe) body: CreateUserDto,
-    @Param('id', IsValidIdType) id: number
+    @Param('id', new CustomParseIntPipe('ID')) id: number
   ) {
     const { email } = data
     return this.userService.updateUserById(id, body, email)
