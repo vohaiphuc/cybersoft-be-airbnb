@@ -31,7 +31,7 @@ export class UserController {
   @AdminJwtGuard
   @Delete(":id")
   deleteUserById(
-    @Param('id', new CustomParseIntPipe('ID')) id: number
+    @Param('id', new CustomParseIntPipe('id')) id: number
   ) {
     return this.userService.deleteUserById(id)
   }
@@ -39,8 +39,8 @@ export class UserController {
   @AdminJwtGuard
   @Get("phan-trang-tim-kiem")
   getAllUsersPagination(
-    @Query('pageIndex', new CustomParseIntPipe('PageIndex')) pageIndex: number,
-    @Query('pageSize', new CustomParseIntPipe('PageSize')) pageSize: number,
+    @Query('pageIndex', new CustomParseIntPipe('pageIndex')) pageIndex: number,
+    @Query('pageSize', new CustomParseIntPipe('pageSize')) pageSize: number,
     @Query('TenNguoiDung') name: string,
   ) {
     return this.userService.getAllUsersPagination(pageIndex, pageSize, name)
@@ -49,7 +49,7 @@ export class UserController {
   @AdminJwtGuard
   @Get(":id")
   getUserById(
-    @Param('id', new CustomParseIntPipe('ID')) id: number
+    @Param('id', new CustomParseIntPipe('id')) id: number
   ) {
     return this.userService.getUserById(id)
   }
@@ -59,7 +59,7 @@ export class UserController {
   updateUserById(
     @User('data') data: I_Data_Token,
     @Body(CustomValidationPipe) body: CreateUserDto,
-    @Param('id', new CustomParseIntPipe('ID')) id: number
+    @Param('id', new CustomParseIntPipe('id')) id: number
   ) {
     const { email } = data
     return this.userService.updateUserById(id, body, email)
@@ -72,4 +72,4 @@ export class UserController {
   ) {
     return this.userService.getUsersByName(name)
   }
-}
+} 

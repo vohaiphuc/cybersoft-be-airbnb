@@ -7,6 +7,7 @@ import * as brcypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt';
 import { Role, SignUpDto } from './dto/auth.dto';
 import { I_Data_Token } from './dto/token-auth.dto';
+import { USER_SELECTED_COLUMN } from 'src/common/const/prisma.const';
 
 @Injectable()
 export class AuthService {
@@ -55,14 +56,7 @@ export class AuthService {
         }
         const registeredUser = await this.prisma.nguoi_dung.findFirst({
             where: { email },
-            select: {
-                name: true,
-                email: true,
-                phone: true,
-                birth_day: true,
-                gender: true,
-                role: true,
-            }
+            select: USER_SELECTED_COLUMN
         })
         const decodeRefreshToken = this.jwtService.decode(user.refresh_token)
         const key = decodeRefreshToken.data.key
@@ -97,7 +91,7 @@ export class AuthService {
             email,
             password: brcypt.hashSync(password, 10),
             phone,
-            birth_day,
+            birth_day: new Date(birth_day),
             gender,
             role,
             refresh_token,
@@ -105,14 +99,7 @@ export class AuthService {
         await this.prisma.nguoi_dung.create({ data: newUser })
         const registeredUser = await this.prisma.nguoi_dung.findFirst({
             where: { email },
-            select: {
-                name: true,
-                email: true,
-                phone: true,
-                birth_day: true,
-                gender: true,
-                role: true,
-            }
+            select: USER_SELECTED_COLUMN
         })
         const access_token = this.createToken({ email, key })
         const data = {

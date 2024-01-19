@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsEnum, IsISO8601, IsNumberString, IsString, Length } from "class-validator";
+import { IsDateString, IsEmail, IsEnum, IsNotEmpty, IsNumberString, IsString, Length, isDate } from "class-validator";
 
 export enum Gender {
     MALE = 'MALE',
@@ -12,9 +12,11 @@ export enum Role {
 }
 
 const MessageValidation = {
+    notEmpty: "Không được để trống",
     name: "Phải là string",
     email: "Dùng định dạng: example@domain.com",
     password: "Phải là string",
+    passwordLength: "Tối thiểu 6 kí tự",
     phone: "Phải là number string",
     phoneLength: "Tối thiểu 8 chữ số, tối đa 15 chữ số",
     birth_day: "Dùng định dạng ISO8601: 'YYYY-MM-DD' hoặc 'YYYY-MM-DDTHH:mm:ss.sssZ'",
@@ -27,11 +29,13 @@ export class SignInDto {
     email: string
 
     @ApiProperty({ type: String })
+    @IsNotEmpty({ message: MessageValidation.notEmpty })
     password: string
 }
 
 export class SignUpDto {
     @ApiProperty({ type: String })
+    @IsNotEmpty({ message: MessageValidation.notEmpty })
     @IsString({ message: MessageValidation.name })
     name: string
 
@@ -40,6 +44,8 @@ export class SignUpDto {
     email: string
 
     @ApiProperty({ type: String })
+    @IsNotEmpty({ message: MessageValidation.notEmpty })
+    @Length(6, Infinity, { message: MessageValidation.passwordLength })
     @IsString({ message: MessageValidation.password })
     password: string
 
@@ -48,9 +54,9 @@ export class SignUpDto {
     @IsNumberString({}, { message: MessageValidation.phone })
     phone: string
 
-    @ApiProperty({ type: String, example: new Date() })
-    @IsISO8601({ strict: true }, { message: MessageValidation.birth_day })
-    birth_day: string
+    @ApiProperty({ type: Date, example: new Date() })
+    @IsDateString({ strict: true }, { message: MessageValidation.birth_day })
+    birth_day: Date
 
     @ApiProperty({ enum: Gender })
     @IsEnum(Gender, { message: MessageValidation.gender })

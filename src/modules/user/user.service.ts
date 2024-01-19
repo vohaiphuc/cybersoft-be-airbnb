@@ -6,6 +6,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { AuthService } from '../auth/auth.service';
 import * as brcypt from 'bcrypt'
 import { Role } from '../auth/dto/auth.dto';
+import { USER_SELECTED_COLUMN } from 'src/common/const/prisma.const';
 
 @Injectable()
 export class UserService {
@@ -29,15 +30,7 @@ export class UserService {
 
     async getAllUsers() {
         const userList = await this.prisma.nguoi_dung.findMany({
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                phone: true,
-                birth_day: true,
-                gender: true,
-                role: true,
-            },
+            select: USER_SELECTED_COLUMN,
         })
         return ResponseData(HttpStatus.OK, Message.USER.SUCCESS, userList)
     }
@@ -70,45 +63,17 @@ export class UserService {
                     contains: name
                 }
             },
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                phone: true,
-                birth_day: true,
-                gender: true,
-                role: true,
-            }
+            select: USER_SELECTED_COLUMN,
+            skip: (pageIndex - 1) * pageSize,
+            take: pageSize,
         })
-        if (!users) { return ResponseData(HttpStatus.OK, Message.USER.SUCCESS, []) }
-        const pageCount = Math.ceil(users.length / pageSize)
-        if (pageIndex > pageCount) {
-            throw new HttpException(Message.USER.FAIL_PAGEINDEX, HttpStatus.BAD_REQUEST)
-        }
-        const start = (pageIndex - 1) * pageSize
-        const end = start + +pageSize
-        const result = []
-        for (var i = start; i < end; i++) {
-            if (!users[i]) {
-                break
-            }
-            result.push(users[i])
-        }
-        return ResponseData(HttpStatus.OK, Message.USER.SUCCESS, result)
+        return ResponseData(HttpStatus.OK, Message.USER.SUCCESS, users)
     }
 
     async getUserById(id: number) {
         const user = await this.prisma.nguoi_dung.findUnique({
             where: { id },
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                phone: true,
-                birth_day: true,
-                gender: true,
-                role: true,
-            }
+            select: USER_SELECTED_COLUMN
         })
         return ResponseData(200, Message.USER.SUCCESS, user)
     }
@@ -119,7 +84,7 @@ export class UserService {
         const { ADMIN, USER } = Role
 
         if (checkUserRole === USER && checkUser.id !== id) {
-            throw new HttpException(Message.USER.UPDATE_INFO_FAIL_UNAUTHORIZED, HttpStatus.UNAUTHORIZED)
+            throw new HttpException(Message.USER.UPDATE_INFO_FAIL_FORBIDDEN, HttpStatus.FORBIDDEN)
         }
 
         const newRole = checkUserRole === ADMIN ? body.role : checkUserRole
@@ -142,15 +107,7 @@ export class UserService {
                     contains: name
                 }
             },
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                phone: true,
-                birth_day: true,
-                gender: true,
-                role: true,
-            },
+            select: USER_SELECTED_COLUMN,
         })
         return ResponseData(HttpStatus.OK, Message.USER.SUCCESS, users)
     }

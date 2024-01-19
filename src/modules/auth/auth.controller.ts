@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseFilters } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseFilters, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { HttpExceptionFilter } from 'src/filters/http-exception.fitler';
@@ -25,7 +25,7 @@ export class AuthController {
 
   @Post("signup")
   signUp(
-    @Body(CustomValidationPipe) body: SignUpDto
+    @Body(CustomValidationPipe, new ValidationPipe({ transform: true })) body: SignUpDto
   ) {
     const role: Role = Role.USER
     return this.authService.signUp(body, role)

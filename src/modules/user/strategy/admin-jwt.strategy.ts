@@ -30,7 +30,7 @@ export class AdminJwtStrategy extends PassportStrategy(Strategy, "jwt-admin") {
             throw new HttpException(Message.USER.NOT_FOUND, HttpStatus.BAD_REQUEST)
         }
         if (user.role !== 'ADMIN') {
-            throw new HttpException(Message.USER.UNAUTHORIZED, HttpStatus.FORBIDDEN)
+            throw new HttpException(Message.USER.FORBIDDEN, HttpStatus.FORBIDDEN)
         }
         return payload
     }

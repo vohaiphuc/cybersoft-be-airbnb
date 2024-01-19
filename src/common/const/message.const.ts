@@ -51,12 +51,12 @@ export const Message = {
     SUCCESS: 'Lấy thông tin người dùng thành công',
     NOT_FOUND: 'Không tìm thấy người dùng',
     UPDATE_INFO_SUCCESS: 'Cập nhật thông tin tài khoản thành công',
-    UPDATE_INFO_FAIL_UNAUTHORIZED:
+    UPDATE_INFO_FAIL_FORBIDDEN:
       'Cập nhật thất bại, không đủ quyền hạn để thực hiện tác vụ này',
     UPDATE_PASSWORD_SUCCESS: 'Thay đổi mật khẩu thành công',
     UPDATE_PASSWORD_FAIL_INCORRECT: 'Thay đổi mật khẩu thất bại',
     UPDATE_AVATAR_SUCCESS: 'Thay đổi ảnh đại diện thành công',
-    UNAUTHORIZED: 'Không đủ quyền hạn để thực hiện tác vụ này',
+    FORBIDDEN: 'Không đủ quyền hạn để thực hiện tác vụ này',
     DELETE_SUCCESS: 'Xóa tài khoản thành công',
     FAIL_PAGEINDEX: 'PageIndex vượt quá số trang có thể có',
   },
