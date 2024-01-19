@@ -43,7 +43,6 @@ export const Message = {
     UNSAVED: 'Bỏ lưu',
     NOTSAVED: 'Chưa lưu',
     DELETE_FAIL_INVALID: 'Xóa thất bại, không tìm thấy hình',
-    DELETE_FAIL_UNAUTHORIZED: 'Người dùng không có quyền xóa hình ảnh này',
     DELETE_SUCESS: 'Xóa thành công',
     UPLOAD_SUCCESS: 'Đăng hình thành công',
     NOT_FOUND: 'Không tìm thấy hình ảnh',
