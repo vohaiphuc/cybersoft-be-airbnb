@@ -40,12 +40,12 @@ export class CustomParseIntPipe implements PipeTransform<string, number> {
   }
 
   transform(value: string): number {
-    const id = parseInt(value, 10);
+    const inputValue = parseInt(value, 10);
 
-    if (isNaN(id) || id <= 0) {
+    if (isNaN(inputValue) || inputValue <= 0) {
       throw new BadRequestException(`${this.paramName} không hợp lệ`);
     }
 
-    return id;
+    return inputValue;
   }
 }
