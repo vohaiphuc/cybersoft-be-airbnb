@@ -18,7 +18,7 @@ export const Message = {
     DELETED_SUCCESS: 'Xóa bình luận thành công!',
     FAIL: 'Đã có lỗi xảy ra, vui lòng thử lại: ',
     FORBIDDEN: 'Không đủ quyền hạn để thực hiện tác vụ này',
-    NOT_FOUND: 'Nội dung bình luận không tồn tại hoặc đã bị xóa!',
+    NOT_FOUND: 'Bình luận không tồn tại!',
   },
   BOOKING: {
     LIST_ALL_SUCCESS: 'Lấy thành công danh sách tất cả lịch đặt phòng!',
@@ -30,7 +30,7 @@ export const Message = {
     UPDATED_SUCCESS: 'Cập nhật lịch đặt phòng thành công!',
     DELETED_SUCCESS: 'Xóa lịch đặt phòng thành công!',
     FAIL: 'Đã có lỗi xảy ra, vui lòng thử lại: ',
-    NOT_FOUND: 'Nội dung lịch đặt phòng không tồn tại hoặc đã bị xóa!',
+    NOT_FOUND: 'Lịch đặt phòng không tồn tại!',
     FORBIDDEN: 'Không đủ quyền hạn để thực hiện tác vụ này',
   },
   IMAGE: {
