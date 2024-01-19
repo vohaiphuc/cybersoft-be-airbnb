@@ -1,21 +1,19 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Prisma, PrismaClient, nguoi_dung } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { Message } from 'src/common/const/message.const';
 import { ResponseData } from 'src/common/util/response.utils';
 import * as brcypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt';
-import { Gender, Role, SignUpDto } from './dto/auth.dto';
+import { Role, SignUpDto } from './dto/auth.dto';
 import { I_Data_Token } from './dto/token-auth.dto';
-
 
 @Injectable()
 export class AuthService {
     constructor(
         private readonly configService: ConfigService,
         private readonly jwtService: JwtService,
-    ) {
-    }
+    ) { }
     private prisma = new PrismaClient()
 
     private createToken(data: I_Data_Token) {

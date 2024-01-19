@@ -1,12 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { PrismaClient, nguoi_dung } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { Message } from 'src/common/const/message.const';
 import { ResponseData } from 'src/common/util/response.utils';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthService } from '../auth/auth.service';
 import * as brcypt from 'bcrypt'
 import { Role } from '../auth/dto/auth.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {

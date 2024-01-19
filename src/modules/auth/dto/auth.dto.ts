@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEnum, IsISO8601, IsNumberString, IsPhoneNumber, IsString, Length, isNumberString } from "class-validator";
+import { IsEmail, IsEnum, IsISO8601, IsNumberString, IsString, Length } from "class-validator";
 
 export enum Gender {
     MALE = 'MALE',
@@ -11,22 +11,23 @@ export enum Role {
     ADMIN = 'ADMIN'
 }
 
-export class SignInDto {
-    @ApiProperty({ type: String })
-    email: string
-
-    @ApiProperty({ type: String })
-    password: string
-}
-
 const MessageValidation = {
     name: "Phải là string",
-    email: "Phải là string",
+    email: "Dùng định dạng: example@domain.com",
     password: "Phải là string",
     phone: "Phải là number string",
     phoneLength: "Tối thiểu 8 chữ số, tối đa 15 chữ số",
     birth_day: "Dùng định dạng ISO8601: 'YYYY-MM-DD' hoặc 'YYYY-MM-DDTHH:mm:ss.sssZ'",
     gender: "'MALE' | 'FEMALE'",
+}
+
+export class SignInDto {
+    @ApiProperty({ type: String })
+    @IsEmail({}, { message: MessageValidation.email })
+    email: string
+
+    @ApiProperty({ type: String })
+    password: string
 }
 
 export class SignUpDto {
@@ -35,7 +36,7 @@ export class SignUpDto {
     name: string
 
     @ApiProperty({ type: String })
-    @IsString({ message: MessageValidation.email })
+    @IsEmail({}, { message: MessageValidation.email })
     email: string
 
     @ApiProperty({ type: String })
@@ -43,8 +44,8 @@ export class SignUpDto {
     password: string
 
     @ApiProperty({ type: String })
-    @IsNumberString(null, { message: MessageValidation.phone })
     @Length(8, 15, { message: MessageValidation.phoneLength })
+    @IsNumberString({}, { message: MessageValidation.phone })
     phone: string
 
     @ApiProperty({ type: String, example: new Date() })
