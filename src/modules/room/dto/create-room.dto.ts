@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsInt, IsString, Min } from 'class-validator';
+import {
+  IsBoolean,
+  IsInt,
+  IsNumber,
+  IsPositive,
+  IsString,
+  Max,
+  Min,
+} from 'class-validator';
 
 export class CreateRoomDto {
   @ApiProperty()
@@ -8,22 +16,22 @@ export class CreateRoomDto {
 
   @ApiProperty()
   @IsInt()
-  @Min(0)
+  @IsPositive()
   khach: number;
 
   @ApiProperty()
   @IsInt()
-  @Min(0)
+  @IsPositive()
   phong_ngu: number;
 
   @ApiProperty()
   @IsInt()
-  @Min(0)
+  @IsPositive()
   giuong: number;
 
   @ApiProperty()
   @IsInt()
-  @Min(0)
+  @IsPositive()
   phong_tam: number;
 
   @ApiProperty()
@@ -31,8 +39,9 @@ export class CreateRoomDto {
   mo_ta: string;
 
   @ApiProperty()
-  @IsInt()
-  @Min(100000)
+  @IsNumber()
+  @Min(0)
+  @Max(1e9)
   gia_tien: number;
 
   @ApiProperty()
@@ -69,6 +78,6 @@ export class CreateRoomDto {
 
   @ApiProperty()
   @IsInt()
-  @Min(1)
+  @IsPositive()
   vi_tri_id: number;
 }

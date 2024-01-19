@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { Message } from 'src/common/const/message.const';
 import { ResponseData } from 'src/common/util/response.utils';
@@ -19,7 +19,7 @@ export class RoomService {
       where: { id: createRoomDto.vi_tri_id },
     });
     if (!viTri) {
-      return ResponseData(HttpStatus.NOT_FOUND, Message.LOCATION.NOT_FOUND, '');
+      throw new HttpException(Message.LOCATION.NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     await this.prisma.phong.create({
       data: createRoomDto,
@@ -32,7 +32,7 @@ export class RoomService {
       where: { id: locationId },
     });
     if (!viTri) {
-      return ResponseData(HttpStatus.NOT_FOUND, Message.LOCATION.NOT_FOUND, []);
+      throw new HttpException(Message.LOCATION.NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     const roomByLocationId = await this.prisma.phong.findMany({
       where: {
@@ -86,13 +86,13 @@ export class RoomService {
       where: { id },
     });
     if (!room) {
-      return ResponseData(HttpStatus.NOT_FOUND, Message.ROOM.NOT_FOUND, '');
+      throw new HttpException(Message.ROOM.NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     const viTri = await this.prisma.vi_tri.findUnique({
       where: { id: updateRoomDto.vi_tri_id },
     });
     if (!viTri) {
-      return ResponseData(HttpStatus.NOT_FOUND, Message.LOCATION.NOT_FOUND, '');
+      throw new HttpException(Message.LOCATION.NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     await this.prisma.phong.update({
       where: { id },
@@ -106,7 +106,7 @@ export class RoomService {
       where: { id },
     });
     if (!room) {
-      return ResponseData(HttpStatus.NOT_FOUND, Message.ROOM.NOT_FOUND, '');
+      throw new HttpException(Message.ROOM.NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     const bookedRoom = await this.prisma.dat_phong.findFirst({
       where: {
@@ -128,13 +128,13 @@ export class RoomService {
 
   async uploadRoomImage(id: number, file: Express.Multer.File) {
     if (!file) {
-      return ResponseData(HttpStatus.BAD_REQUEST, Message.IMAGE.NOT_FOUND, '');
+      throw new HttpException(Message.IMAGE.NOT_FOUND, HttpStatus.BAD_REQUEST);
     }
     const room = await this.prisma.phong.findUnique({
       where: { id },
     });
     if (!room) {
-      return ResponseData(HttpStatus.NOT_FOUND, Message.ROOM.NOT_FOUND, '');
+      throw new HttpException(Message.ROOM.NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     await this.prisma.phong.update({
       where: {

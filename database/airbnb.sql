@@ -25,7 +25,7 @@ CREATE TABLE phong(
     giuong INT NOT NULL,
     phong_tam INT NOT NULL,
     mo_ta VARCHAR(255) NOT NULL,
-    gia_tien INT NOT NULL,
+    gia_tien DOUBLE NOT NULL,
     may_giat BOOLEAN DEFAULT false,
     ban_ui BOOLEAN DEFAULT false,
     tivi BOOLEAN DEFAULT false,

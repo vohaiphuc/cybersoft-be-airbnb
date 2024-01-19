@@ -3,22 +3,22 @@ import {
   Body,
   Delete,
   Get,
-  HttpException,
   Param,
-  ParseIntPipe,
   Post,
   Put,
   Query,
   UploadedFile,
   UseInterceptors,
   UseFilters,
-  HttpStatus,
   ParseFilePipe,
   FileTypeValidator,
 } from '@nestjs/common';
 import { RoomService } from './room.service';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
-import { CustomValidationPipe } from 'src/pipes/validation.pipe';
+import {
+  CustomValidationPipe,
+  CustomParseIntPipe,
+} from 'src/pipes/validation.pipe';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { HttpExceptionFilter } from 'src/filters/http-exception.fitler';
@@ -26,7 +26,6 @@ import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { UploadRoomImageDto } from './dto/upload-room-image.dto';
 import { AdminJwtGuard } from 'src/decorators/jwt-guard.decorator';
-import { Message } from 'src/common/const/message.const';
 
 @ApiTags('Room')
 @Controller('/api/rooms')
@@ -48,17 +47,7 @@ export class RoomController {
 
   @Get('get-room-by-location-id')
   getRoomByLocationId(
-    @Query(
-      'locationId',
-      new ParseIntPipe({
-        exceptionFactory: () => {
-          throw new HttpException(
-            Message.REQUEST.ID_ERROR,
-            HttpStatus.BAD_REQUEST,
-          );
-        },
-      }),
-    )
+    @Query('locationId', new CustomParseIntPipe('locationId'))
     locationId: string,
   ) {
     return this.roomService.getRoomByLocationId(+locationId);
@@ -66,29 +55,9 @@ export class RoomController {
 
   @Get('pagination-search')
   getAllRoomsPagination(
-    @Query(
-      'pageIndex',
-      new ParseIntPipe({
-        exceptionFactory: () => {
-          throw new HttpException(
-            'Input không hợp lệ. Vui lòng kiểm tra pageIndex và pageSize!',
-            HttpStatus.BAD_REQUEST,
-          );
-        },
-      }),
-    )
+    @Query('pageIndex', new CustomParseIntPipe('pageIndex'))
     pageIndex: string,
-    @Query(
-      'pageSize',
-      new ParseIntPipe({
-        exceptionFactory: () => {
-          throw new HttpException(
-            'Input không hợp lệ. Vui lòng kiểm tra pageIndex và pageSize!',
-            HttpStatus.BAD_REQUEST,
-          );
-        },
-      }),
-    )
+    @Query('pageSize', new CustomParseIntPipe('pageSize'))
     pageSize: string,
     @Query('keyword') keyword: string,
   ) {
@@ -101,17 +70,7 @@ export class RoomController {
 
   @Get(':id')
   getRoomById(
-    @Param(
-      'id',
-      new ParseIntPipe({
-        exceptionFactory: () => {
-          throw new HttpException(
-            Message.REQUEST.ID_ERROR,
-            HttpStatus.BAD_REQUEST,
-          );
-        },
-      }),
-    )
+    @Param('id', new CustomParseIntPipe('id'))
     id: number,
   ) {
     return this.roomService.getRoomById(id);
@@ -121,17 +80,7 @@ export class RoomController {
   @Put(':id')
   updateRoomById(
     @Body(CustomValidationPipe) updateRoomDto: UpdateRoomDto,
-    @Param(
-      'id',
-      new ParseIntPipe({
-        exceptionFactory: () => {
-          throw new HttpException(
-            Message.REQUEST.ID_ERROR,
-            HttpStatus.BAD_REQUEST,
-          );
-        },
-      }),
-    )
+    @Param('id', new CustomParseIntPipe('id'))
     id: number,
   ) {
     return this.roomService.updateRoomById(id, updateRoomDto);
@@ -140,17 +89,7 @@ export class RoomController {
   @AdminJwtGuard
   @Delete(':id')
   deleteRoomById(
-    @Param(
-      'id',
-      new ParseIntPipe({
-        exceptionFactory: () => {
-          throw new HttpException(
-            Message.REQUEST.ID_ERROR,
-            HttpStatus.BAD_REQUEST,
-          );
-        },
-      }),
-    )
+    @Param('id', new CustomParseIntPipe('id'))
     id: number,
   ) {
     return this.roomService.deleteRoomById(id);
@@ -175,17 +114,7 @@ export class RoomController {
     type: UploadRoomImageDto,
   })
   uploadRoomImage(
-    @Query(
-      'roomId',
-      new ParseIntPipe({
-        exceptionFactory: () => {
-          throw new HttpException(
-            Message.REQUEST.ID_ERROR,
-            HttpStatus.BAD_REQUEST,
-          );
-        },
-      }),
-    )
+    @Query('roomId', new CustomParseIntPipe('roomId'))
     roomId: string,
     @UploadedFile(
       new ParseFilePipe({

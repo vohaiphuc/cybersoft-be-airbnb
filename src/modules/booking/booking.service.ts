@@ -65,8 +65,27 @@ export class BookingService {
       where: { id: dto.ma_phong },
     });
     if (!isRoomValid)
-      return ResponseData(HttpStatus.OK, Message.ROOM.NOT_FOUND, '');
+      return ResponseData(HttpStatus.NOT_FOUND, Message.ROOM.NOT_FOUND, '');
 
+    const bookingList = await this.prisma.dat_phong.findMany({
+      where: { ma_phong: dto.ma_phong },
+    });
+    let isBookingValid = true;
+    bookingList.forEach((item) => {
+      const dateCheckInInput = new Date(dto.ngay_den);
+      const dateCheckOutInput = new Date(dto.ngay_di);
+      if (
+        !(dateCheckOutInput < item.ngay_den || item.ngay_di < dateCheckInInput)
+      ) {
+        isBookingValid = false;
+      }
+    });
+    if (!isBookingValid)
+      return ResponseData(
+        HttpStatus.BAD_REQUEST,
+        Message.BOOKING.DOUBLE_BOOKED,
+        '',
+      );
     await this.prisma.dat_phong.create({
       data: { ...dto, ma_nguoi_dat: user.id },
     });
@@ -94,6 +113,30 @@ export class BookingService {
         '',
       );
     }
+    const bookingList = await this.prisma.dat_phong.findMany({
+      where: { ma_phong: dto.ma_phong },
+    });
+
+    let isBookingValid = true;
+    bookingList.forEach((item) => {
+      const dateCheckInInput = new Date(dto.ngay_den);
+      const dateCheckOutInput = new Date(dto.ngay_di);
+      if (id !== item.id) {
+        if (
+          !(
+            dateCheckOutInput < item.ngay_den || item.ngay_di < dateCheckInInput
+          )
+        ) {
+          isBookingValid = false;
+        }
+      }
+    });
+    if (!isBookingValid)
+      return ResponseData(
+        HttpStatus.BAD_REQUEST,
+        Message.BOOKING.DOUBLE_BOOKED,
+        '',
+      );
 
     await this.prisma.dat_phong.update({
       where: {

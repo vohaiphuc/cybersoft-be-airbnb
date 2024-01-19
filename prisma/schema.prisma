@@ -58,7 +58,7 @@ model phong {
   giuong    Int
   phong_tam Int
   mo_ta     String      @db.VarChar(255)
-  gia_tien  Int
+  gia_tien  Float
   may_giat  Boolean?    @default(false)
   ban_ui    Boolean?    @default(false)
   tivi      Boolean?    @default(false)
