@@ -49,3 +49,13 @@ export class CustomParseIntPipe implements PipeTransform<string, number> {
     return inputValue;
   }
 }
+
+export class CustomImageFilePipe implements PipeTransform {
+  async transform(file: Express.Multer.File): Promise<Express.Multer.File> {
+    const imageFileTypeRegex = /\.(png|jpeg|jpg|gif|bmp|tiff|webp|svg)$/i;
+    if (!imageFileTypeRegex.test(file.originalname)) {
+      throw new BadRequestException('Không phải file hình!');
+    }
+    return file;
+  }
+}

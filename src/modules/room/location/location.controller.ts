@@ -9,8 +9,6 @@ import {
   Query,
   UploadedFile,
   UseFilters,
-  ParseFilePipe,
-  FileTypeValidator,
 } from '@nestjs/common';
 import { LocationService } from './location.service';
 import { ApiBody, ApiConsumes, ApiTags, ApiQuery } from '@nestjs/swagger';
@@ -24,6 +22,7 @@ import { UpdateLocationDto } from './dto/update-location.dto';
 import { UploadLocationImageDto } from './dto/upload-location-image.dto';
 import { AdminJwtGuard } from 'src/decorators/jwt-guard.decorator';
 import { UseUploadImage } from 'src/decorators/image.decorator';
+import { CustomImageFilePipe } from '../../../pipes/validation.pipe';
 
 @ApiTags('Location')
 @Controller('/api/locations')
@@ -98,15 +97,7 @@ export class LocationController {
   uploadLocationImage(
     @Query('locationId', new CustomParseIntPipe('locationId'))
     locationId: number,
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          new FileTypeValidator({
-            fileType: '.(png|jpeg|jpg|gif|bmp|tiff|webp|svg)',
-          }),
-        ],
-      }),
-    )
+    @UploadedFile(new CustomImageFilePipe())
     file: Express.Multer.File,
   ) {
     return this.locationService.uploadLocationImage(locationId, file);

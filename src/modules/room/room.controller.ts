@@ -9,14 +9,13 @@ import {
   Query,
   UploadedFile,
   UseFilters,
-  ParseFilePipe,
-  FileTypeValidator,
 } from '@nestjs/common';
 import { RoomService } from './room.service';
 import { ApiBody, ApiConsumes, ApiQuery, ApiTags } from '@nestjs/swagger';
 import {
   CustomValidationPipe,
   CustomParseIntPipe,
+  CustomImageFilePipe,
 } from 'src/pipes/validation.pipe';
 import { HttpExceptionFilter } from 'src/filters/http-exception.fitler';
 import { CreateRoomDto } from './dto/create-room.dto';
@@ -100,15 +99,7 @@ export class RoomController {
   uploadRoomImage(
     @Query('roomId', new CustomParseIntPipe('roomId'))
     roomId: number,
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          new FileTypeValidator({
-            fileType: '.(png|jpeg|jpg|gif|bmp|tiff|webp|svg)',
-          }),
-        ],
-      }),
-    )
+    @UploadedFile(new CustomImageFilePipe())
     file: Express.Multer.File,
   ) {
     return this.roomService.uploadRoomImage(roomId, file);
