@@ -9,7 +9,6 @@ import {
   Query,
   UploadedFile,
   UseFilters,
-  UseInterceptors,
   ParseFilePipe,
   FileTypeValidator,
 } from '@nestjs/common';
@@ -22,10 +21,9 @@ import {
   CustomParseIntPipe,
 } from 'src/pipes/validation.pipe';
 import { UpdateLocationDto } from './dto/update-location.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
 import { UploadLocationImageDto } from './dto/upload-location-image.dto';
 import { AdminJwtGuard } from 'src/decorators/jwt-guard.decorator';
+import { UseUploadImage } from 'src/decorators/image.decorator';
 
 @ApiTags('Location')
 @Controller('/api/locations')
@@ -92,18 +90,7 @@ export class LocationController {
 
   @AdminJwtGuard
   @Post('/upload-image')
-  @UseInterceptors(
-    FileInterceptor('image', {
-      storage: diskStorage({
-        destination: process.cwd() + '/public/img',
-        filename: (_, file, callback) =>
-          callback(null, new Date().getTime() + '_' + file.originalname),
-      }),
-      limits: {
-        files: 1,
-      },
-    }),
-  )
+  @UseUploadImage('image')
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     type: UploadLocationImageDto,

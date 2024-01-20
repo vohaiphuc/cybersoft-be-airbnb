@@ -8,7 +8,6 @@ import {
   Put,
   Query,
   UploadedFile,
-  UseInterceptors,
   UseFilters,
   ParseFilePipe,
   FileTypeValidator,
@@ -19,13 +18,12 @@ import {
   CustomValidationPipe,
   CustomParseIntPipe,
 } from 'src/pipes/validation.pipe';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
 import { HttpExceptionFilter } from 'src/filters/http-exception.fitler';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { UploadRoomImageDto } from './dto/upload-room-image.dto';
 import { AdminJwtGuard } from 'src/decorators/jwt-guard.decorator';
+import { UseUploadImage } from 'src/decorators/image.decorator';
 
 @ApiTags('Room')
 @Controller('/api/rooms')
@@ -94,18 +92,7 @@ export class RoomController {
 
   @AdminJwtGuard
   @Post('/upload-image')
-  @UseInterceptors(
-    FileInterceptor('image', {
-      storage: diskStorage({
-        destination: process.cwd() + '/public/img',
-        filename: (_, file, callback) =>
-          callback(null, new Date().getTime() + '_' + file.originalname),
-      }),
-      limits: {
-        files: 1,
-      },
-    }),
-  )
+  @UseUploadImage('image')
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     type: UploadRoomImageDto,
