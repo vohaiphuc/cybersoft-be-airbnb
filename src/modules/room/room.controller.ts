@@ -14,7 +14,7 @@ import {
   FileTypeValidator,
 } from '@nestjs/common';
 import { RoomService } from './room.service';
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiQuery, ApiTags } from '@nestjs/swagger';
 import {
   CustomValidationPipe,
   CustomParseIntPipe,
@@ -54,6 +54,7 @@ export class RoomController {
   }
 
   @Get('pagination-search')
+  @ApiQuery({ name: 'keyword', required: false })
   getAllRoomsPagination(
     @Query('pageIndex', new CustomParseIntPipe('pageIndex'))
     pageIndex: number,

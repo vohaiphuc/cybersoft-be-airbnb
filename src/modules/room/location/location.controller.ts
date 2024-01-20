@@ -14,7 +14,7 @@ import {
   FileTypeValidator,
 } from '@nestjs/common';
 import { LocationService } from './location.service';
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiTags, ApiQuery } from '@nestjs/swagger';
 import { HttpExceptionFilter } from 'src/filters/http-exception.fitler';
 import { CreateLocationDto } from './dto/create-location.dto';
 import {
@@ -48,6 +48,7 @@ export class LocationController {
   }
 
   @Get('pagination-search')
+  @ApiQuery({ name: 'keyword', required: false })
   getAllLocationsPagination(
     @Query('pageIndex', new CustomParseIntPipe('pageIndex'))
     pageIndex: number,
