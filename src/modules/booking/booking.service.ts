@@ -64,22 +64,17 @@ export class BookingService {
       where: { ma_phong: dto.ma_phong },
     });
 
-    let isBookingValid = true;
+    const dateCheckIn = new Date(dto.ngay_den);
+    const dateCheckOut = new Date(dto.ngay_di);
 
     bookingList.forEach((item) => {
-      const dateCheckIn = new Date(dto.ngay_den);
-      const dateCheckOut = new Date(dto.ngay_di);
-
       if (!(dateCheckOut < item.ngay_den || item.ngay_di < dateCheckIn)) {
-        isBookingValid = false;
+        throw new HttpException(
+          Message.BOOKING.DOUBLE_BOOKED,
+          HttpStatus.BAD_REQUEST,
+        );
       }
     });
-
-    if (!isBookingValid)
-      throw new HttpException(
-        Message.BOOKING.DOUBLE_BOOKED,
-        HttpStatus.BAD_REQUEST,
-      );
 
     await this.prisma.dat_phong.create({
       data: { ...dto, ma_nguoi_dat: user.id },
@@ -107,25 +102,17 @@ export class BookingService {
       where: { ma_phong: dto.ma_phong },
     });
 
-    let isBookingValid = true;
+    const dateCheckIn = new Date(dto.ngay_den);
+    const dateCheckOut = new Date(dto.ngay_di);
 
     bookingList.forEach((item) => {
-      const dateCheckInInput = new Date(dto.ngay_den);
-      const dateCheckOutInput = new Date(dto.ngay_di);
-
-      if (
-        id !== item.id &&
-        !(dateCheckOutInput < item.ngay_den || item.ngay_di < dateCheckInInput)
-      ) {
-        isBookingValid = false;
+      if (!(dateCheckOut < item.ngay_den || item.ngay_di < dateCheckIn)) {
+        throw new HttpException(
+          Message.BOOKING.DOUBLE_BOOKED,
+          HttpStatus.BAD_REQUEST,
+        );
       }
     });
-
-    if (!isBookingValid)
-      throw new HttpException(
-        Message.BOOKING.DOUBLE_BOOKED,
-        HttpStatus.BAD_REQUEST,
-      );
 
     await this.prisma.dat_phong.update({
       where: { id },
