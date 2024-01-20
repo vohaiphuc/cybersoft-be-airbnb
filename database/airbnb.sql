@@ -6,9 +6,9 @@ DROP TABLE IF EXISTS vi_tri;
 CREATE TABLE vi_tri(
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	ten_vi_tri VARCHAR(255) NOT NULL,
-    hinh_anh VARCHAR(255) NOT NULL,
+    hinh_anh VARCHAR(255),
     tinh_thanh VARCHAR(255) NOT NULL,
-    quoc_gia VARCHAR(255) NOT NULL CHECK (quoc_gia IN ('Việt Nam'))
+    quoc_gia VARCHAR(255) NOT NULL
 );
 INSERT INTO vi_tri (ten_vi_tri, hinh_anh, tinh_thanh, quoc_gia) VALUES
     ('Quận 3', 'image_quan_3.jpg', 'Hồ Chí Minh', 'Việt Nam'),
@@ -25,7 +25,7 @@ CREATE TABLE phong(
     giuong INT NOT NULL,
     phong_tam INT NOT NULL,
     mo_ta VARCHAR(255) NOT NULL,
-    gia_tien INT NOT NULL,
+    gia_tien DOUBLE NOT NULL,
     may_giat BOOLEAN DEFAULT false,
     ban_ui BOOLEAN DEFAULT false,
     tivi BOOLEAN DEFAULT false,
@@ -34,7 +34,7 @@ CREATE TABLE phong(
     bep BOOLEAN DEFAULT false,
     do_xe BOOLEAN DEFAULT false,
     ho_boi BOOLEAN DEFAULT false,
-    hinh_anh VARCHAR(255) NOT NULL,
+    hinh_anh VARCHAR(255),
     vi_tri_id INT,
     FOREIGN KEY (vi_tri_id) REFERENCES vi_tri(id)
 );

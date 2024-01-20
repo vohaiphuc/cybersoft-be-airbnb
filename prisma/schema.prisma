@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model binh_luan {
+  id                 Int         @id @default(autoincrement())
+  ma_phong           Int?
+  ma_nguoi_binh_luan Int?
+  ngay_binh_luan     DateTime    @db.DateTime(0)
+  noi_dung           String      @db.VarChar(255)
+  sao_binh_luan      Int
+  phong              phong?      @relation(fields: [ma_phong], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "binh_luan_ibfk_1")
+  nguoi_dung         nguoi_dung? @relation(fields: [ma_nguoi_binh_luan], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "binh_luan_ibfk_2")
+
+  @@index([ma_nguoi_binh_luan], map: "ma_nguoi_binh_luan")
+  @@index([ma_phong], map: "ma_phong")
+}
+
+model dat_phong {
+  id             Int         @id @default(autoincrement())
+  ma_phong       Int?
+  ngay_den       DateTime    @db.DateTime(0)
+  ngay_di        DateTime    @db.DateTime(0)
+  so_luong_khach Int
+  ma_nguoi_dat   Int?
+  phong          phong?      @relation(fields: [ma_phong], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "dat_phong_ibfk_1")
+  nguoi_dung     nguoi_dung? @relation(fields: [ma_nguoi_dat], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "dat_phong_ibfk_2")
+
+  @@index([ma_nguoi_dat], map: "ma_nguoi_dat")
+  @@index([ma_phong], map: "ma_phong")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model nguoi_dung {
+  id            Int         @id @default(autoincrement())
+  name          String      @db.VarChar(255)
+  email         String      @db.VarChar(255)
+  password      String      @db.VarChar(255)
+  refresh_token String      @db.VarChar(255)
+  phone         String      @db.VarChar(255)
+  birth_day     DateTime    @db.DateTime(0)
+  gender        String      @db.VarChar(255)
+  role          String      @db.VarChar(255)
+  binh_luan     binh_luan[]
+  dat_phong     dat_phong[]
+}
+
+model phong {
+  id        Int         @id @default(autoincrement())
+  ten_phong String      @db.VarChar(255)
+  khach     Int
+  phong_ngu Int
+  giuong    Int
+  phong_tam Int
+  mo_ta     String      @db.VarChar(255)
+  gia_tien  Float
+  may_giat  Boolean?    @default(false)
+  ban_ui    Boolean?    @default(false)
+  tivi      Boolean?    @default(false)
+  dieu_hoa  Boolean?    @default(false)
+  wifi      Boolean?    @default(false)
+  bep       Boolean?    @default(false)
+  do_xe     Boolean?    @default(false)
+  ho_boi    Boolean?    @default(false)
+  hinh_anh  String?     @db.VarChar(255)
+  vi_tri_id Int?
+  binh_luan binh_luan[]
+  dat_phong dat_phong[]
+  vi_tri    vi_tri?     @relation(fields: [vi_tri_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "phong_ibfk_1")
+
+  @@index([vi_tri_id], map: "vi_tri_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model vi_tri {
+  id         Int     @id @default(autoincrement())
+  ten_vi_tri String  @db.VarChar(255)
+  hinh_anh   String? @db.VarChar(255)
+  tinh_thanh String  @db.VarChar(255)
+  quoc_gia   String  @db.VarChar(255)
+  phong      phong[]
+}
