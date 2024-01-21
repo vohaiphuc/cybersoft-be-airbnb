@@ -116,9 +116,6 @@ export class RoomService {
   }
 
   async uploadRoomImage(id: number, file: Express.Multer.File) {
-    if (!file) {
-      throw new HttpException(Message.IMAGE.NOT_FOUND, HttpStatus.BAD_REQUEST);
-    }
     const room = await this.prisma.phong.findUnique({
       where: { id },
     });

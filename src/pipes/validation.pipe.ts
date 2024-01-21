@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
+import { imageRegex } from '../common/const/regex.const';
 
 @Injectable()
 export class CustomValidationPipe implements PipeTransform<any> {
@@ -52,9 +53,11 @@ export class CustomParseIntPipe implements PipeTransform<string, number> {
 
 export class CustomImageFilePipe implements PipeTransform {
   async transform(file: Express.Multer.File): Promise<Express.Multer.File> {
-    const imageFileTypeRegex = /\.(png|jpeg|jpg|gif|bmp|tiff|webp|svg)$/i;
-    if (!imageFileTypeRegex.test(file.originalname)) {
-      throw new BadRequestException('Không phải file hình!');
+    if (!file) {
+      throw new BadRequestException('Không có file hình nhé!');
+    }
+    if (!imageRegex.test(file.originalname)) {
+      throw new BadRequestException('Không phải file hình nhé!');
     }
     return file;
   }

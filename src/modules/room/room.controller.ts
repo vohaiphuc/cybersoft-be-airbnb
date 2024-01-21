@@ -15,7 +15,6 @@ import { ApiBody, ApiConsumes, ApiQuery, ApiTags } from '@nestjs/swagger';
 import {
   CustomValidationPipe,
   CustomParseIntPipe,
-  CustomImageFilePipe,
 } from 'src/pipes/validation.pipe';
 import { HttpExceptionFilter } from 'src/filters/http-exception.fitler';
 import { CreateRoomDto } from './dto/create-room.dto';
@@ -99,7 +98,7 @@ export class RoomController {
   uploadRoomImage(
     @Query('roomId', new CustomParseIntPipe('roomId'))
     roomId: number,
-    @UploadedFile(new CustomImageFilePipe())
+    @UploadedFile()
     file: Express.Multer.File,
   ) {
     return this.roomService.uploadRoomImage(roomId, file);
