@@ -11,6 +11,52 @@ export class BookingService {
   constructor(private readonly userService: UserService) {}
   private prisma = new PrismaClient();
 
+  private async checkUserPermisstion(id: number, email: string) {
+    const user = await this.userService.verifyUser(email);
+
+    const bookingSchedule = await this.prisma.dat_phong.findUnique({
+      where: { id },
+    });
+
+    if (!bookingSchedule)
+      throw new HttpException(Message.BOOKING.NOT_FOUND, HttpStatus.NOT_FOUND);
+
+    if (user.role === Role.USER && user.id !== bookingSchedule.ma_nguoi_dat)
+      throw new HttpException(Message.BOOKING.FORBIDDEN, HttpStatus.FORBIDDEN);
+
+    return bookingSchedule;
+  }
+
+  private async checkIsRoomValid(ma_phong: number) {
+    const isRoomValid = await this.prisma.phong.findUnique({
+      where: { id: ma_phong },
+    });
+
+    if (!isRoomValid)
+      throw new HttpException(Message.ROOM.NOT_FOUND, HttpStatus.NOT_FOUND);
+  }
+
+  private async checkIsScheduleConflict(id: number, dto: BookingDto) {
+    const isConflict = await this.prisma.dat_phong.findFirst({
+      where: {
+        ma_phong: dto.ma_phong,
+        OR: [
+          {
+            ngay_den: { lt: new Date(dto.ngay_di) },
+            ngay_di: { gt: new Date(dto.ngay_den) },
+          },
+        ],
+        NOT: { id },
+      },
+    });
+
+    if (isConflict !== null) {
+      throw new HttpException(
+        Message.BOOKING.DOUBLE_BOOKED,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
   async getBookingList() {
     const bookingList = await this.prisma.dat_phong.findMany({});
 
@@ -22,14 +68,7 @@ export class BookingService {
   }
 
   async getBookingSchedule(id: number, email: string) {
-    const user = await this.userService.verifyUser(email);
-
-    const bookingSchedule = await this.prisma.dat_phong.findUnique({
-      where: { id },
-    });
-
-    if (user.role === Role.USER && user.id !== bookingSchedule.ma_nguoi_dat)
-      throw new HttpException(Message.BOOKING.FORBIDDEN, HttpStatus.FORBIDDEN);
+    const bookingSchedule = await this.checkUserPermisstion(id, email);
 
     return ResponseData(
       HttpStatus.OK,
@@ -53,31 +92,8 @@ export class BookingService {
   async postNewBookingSchedule(dto: BookingDto, email: string) {
     const user = await this.userService.verifyUser(email);
 
-    const isRoomValid = await this.prisma.phong.findUnique({
-      where: { id: dto.ma_phong },
-    });
-
-    if (!isRoomValid)
-      throw new HttpException(Message.BOOKING.NOT_FOUND, HttpStatus.NOT_FOUND);
-
-    const bookingList = await this.prisma.dat_phong.findMany({
-      where: {
-        ma_phong: dto.ma_phong,
-        OR: [
-          {
-            ngay_den: { lt: new Date(dto.ngay_di) },
-            ngay_di: { gt: new Date(dto.ngay_den) },
-          },
-        ],
-      },
-    });
-
-    if (bookingList.length !== 0) {
-      throw new HttpException(
-        Message.BOOKING.DOUBLE_BOOKED,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    await this.checkIsRoomValid(dto.ma_phong);
+    await this.checkIsScheduleConflict(-1, dto);
 
     await this.prisma.dat_phong.create({
       data: { ...dto, ma_nguoi_dat: user.id },
@@ -87,39 +103,8 @@ export class BookingService {
   }
 
   async updateBookingSchedule(id: number, dto: BookingDto, email: string) {
-    const user = await this.userService.verifyUser(email);
-
-    const oldSchedule = await this.prisma.dat_phong.findUnique({
-      where: { id },
-    });
-
-    if (!oldSchedule) {
-      throw new HttpException(Message.BOOKING.NOT_FOUND, HttpStatus.NOT_FOUND);
-    }
-
-    if (user.role === Role.USER && user.id !== oldSchedule.ma_nguoi_dat) {
-      throw new HttpException(Message.BOOKING.FORBIDDEN, HttpStatus.FORBIDDEN);
-    }
-
-    const bookingList = await this.prisma.dat_phong.findMany({
-      where: {
-        ma_phong: dto.ma_phong,
-        OR: [
-          {
-            ngay_den: { lt: new Date(dto.ngay_di) },
-            ngay_di: { gt: new Date(dto.ngay_den) },
-          },
-        ],
-        NOT: { id },
-      },
-    });
-
-    if (bookingList.length !== 0) {
-      throw new HttpException(
-        Message.BOOKING.DOUBLE_BOOKED,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    await this.checkUserPermisstion(id, email);
+    await this.checkIsScheduleConflict(id, dto);
 
     await this.prisma.dat_phong.update({
       where: { id },
@@ -130,18 +115,7 @@ export class BookingService {
   }
 
   async deleteBookingSchedule(id: number, email: string) {
-    const user = await this.userService.verifyUser(email);
-
-    const oldSchedule = await this.prisma.dat_phong.findUnique({
-      where: { id },
-    });
-
-    if (!oldSchedule) {
-      throw new HttpException(Message.BOOKING.NOT_FOUND, HttpStatus.NOT_FOUND);
-    }
-
-    if (user.role === Role.USER && user.id !== oldSchedule.ma_nguoi_dat)
-      throw new HttpException(Message.BOOKING.FORBIDDEN, HttpStatus.FORBIDDEN);
+    await this.checkUserPermisstion(id, email);
 
     await this.prisma.dat_phong.delete({
       where: { id },

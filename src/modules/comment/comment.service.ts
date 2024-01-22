@@ -11,6 +11,29 @@ export class CommentService {
   constructor(private readonly userService: UserService) {}
   private prisma = new PrismaClient();
 
+  private async isRoomValid(ma_phong: number) {
+    const isRoomValid = await this.prisma.phong.findUnique({
+      where: { id: ma_phong },
+    });
+
+    if (!isRoomValid)
+      throw new HttpException(Message.ROOM.NOT_FOUND, HttpStatus.NOT_FOUND);
+  }
+
+  private async checkUserPermisstion(id: number, email: string) {
+    const user = await this.userService.verifyUser(email);
+
+    const oldComment = await this.prisma.binh_luan.findUnique({
+      where: { id },
+    });
+
+    if (!oldComment)
+      throw new HttpException(Message.COMMENT.NOT_FOUND, HttpStatus.NOT_FOUND);
+
+    if (user.role === Role.USER && user.id !== oldComment.ma_nguoi_binh_luan)
+      throw new HttpException(Message.COMMENT.FORBIDDEN, HttpStatus.FORBIDDEN);
+  }
+
   async getCommentList() {
     const commentList = await this.prisma.binh_luan.findMany({});
 
@@ -22,12 +45,7 @@ export class CommentService {
   }
 
   async getCommentListByRoom(ma_phong: number) {
-    const isRoomValid = await this.prisma.phong.findUnique({
-      where: { id: ma_phong },
-    });
-
-    if (!isRoomValid)
-      throw new HttpException(Message.ROOM.NOT_FOUND, HttpStatus.NOT_FOUND);
+    await this.isRoomValid(ma_phong);
 
     const commentListByRoom = await this.prisma.binh_luan.findMany({
       where: { ma_phong },
@@ -44,12 +62,7 @@ export class CommentService {
     const user = await this.userService.verifyUser(email);
     const ngay_binh_luan = new Date();
 
-    const isRoomValid = await this.prisma.phong.findUnique({
-      where: { id: dto.ma_phong },
-    });
-
-    if (!isRoomValid)
-      throw new HttpException(Message.ROOM.NOT_FOUND, HttpStatus.NOT_FOUND);
+    await this.isRoomValid(dto.ma_phong);
 
     await this.prisma.binh_luan.create({
       data: { ...dto, ma_nguoi_binh_luan: user.id, ngay_binh_luan },
@@ -59,17 +72,7 @@ export class CommentService {
   }
 
   async updateComment(id: number, dto: CommentDto, email: string) {
-    const user = await this.userService.verifyUser(email);
-
-    const oldComment = await this.prisma.binh_luan.findUnique({
-      where: { id },
-    });
-
-    if (!oldComment)
-      throw new HttpException(Message.COMMENT.NOT_FOUND, HttpStatus.NOT_FOUND);
-
-    if (user.role === Role.USER && user.id !== oldComment.ma_nguoi_binh_luan)
-      throw new HttpException(Message.COMMENT.FORBIDDEN, HttpStatus.FORBIDDEN);
+    await this.checkUserPermisstion(id, email);
 
     await this.prisma.binh_luan.update({
       where: { id },
@@ -80,17 +83,7 @@ export class CommentService {
   }
 
   async deleteComment(id: number, email: string) {
-    const user = await this.userService.verifyUser(email);
-
-    const comment = await this.prisma.binh_luan.findUnique({
-      where: { id },
-    });
-
-    if (!comment)
-      throw new HttpException(Message.COMMENT.NOT_FOUND, HttpStatus.NOT_FOUND);
-
-    if (user.role === Role.USER && user.id !== comment.ma_nguoi_binh_luan)
-      throw new HttpException(Message.COMMENT.FORBIDDEN, HttpStatus.FORBIDDEN);
+    await this.checkUserPermisstion(id, email);
 
     await this.prisma.binh_luan.delete({
       where: { id },
