@@ -11,7 +11,7 @@ export class BookingService {
   constructor(private readonly userService: UserService) {}
   private prisma = new PrismaClient();
 
-  private async checkUserPermisstion(id: number, email: string) {
+  private async checkUserPermission(id: number, email: string) {
     const user = await this.userService.verifyUser(email);
 
     const bookingSchedule = await this.prisma.dat_phong.findUnique({
@@ -68,7 +68,7 @@ export class BookingService {
   }
 
   async getBookingSchedule(id: number, email: string) {
-    const bookingSchedule = await this.checkUserPermisstion(id, email);
+    const bookingSchedule = await this.checkUserPermission(id, email);
 
     return ResponseData(
       HttpStatus.OK,
@@ -103,7 +103,7 @@ export class BookingService {
   }
 
   async updateBookingSchedule(id: number, dto: BookingDto, email: string) {
-    await this.checkUserPermisstion(id, email);
+    await this.checkUserPermission(id, email);
     await this.checkIsScheduleConflict(id, dto);
 
     await this.prisma.dat_phong.update({
@@ -115,7 +115,7 @@ export class BookingService {
   }
 
   async deleteBookingSchedule(id: number, email: string) {
-    await this.checkUserPermisstion(id, email);
+    await this.checkUserPermission(id, email);
 
     await this.prisma.dat_phong.delete({
       where: { id },

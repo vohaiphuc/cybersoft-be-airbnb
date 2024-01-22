@@ -20,7 +20,7 @@ export class CommentService {
       throw new HttpException(Message.ROOM.NOT_FOUND, HttpStatus.NOT_FOUND);
   }
 
-  private async checkUserPermisstion(id: number, email: string) {
+  private async checkUserPermission(id: number, email: string) {
     const user = await this.userService.verifyUser(email);
 
     const oldComment = await this.prisma.binh_luan.findUnique({
@@ -72,7 +72,7 @@ export class CommentService {
   }
 
   async updateComment(id: number, dto: CommentDto, email: string) {
-    await this.checkUserPermisstion(id, email);
+    await this.checkUserPermission(id, email);
 
     await this.prisma.binh_luan.update({
       where: { id },
@@ -83,7 +83,7 @@ export class CommentService {
   }
 
   async deleteComment(id: number, email: string) {
-    await this.checkUserPermisstion(id, email);
+    await this.checkUserPermission(id, email);
 
     await this.prisma.binh_luan.delete({
       where: { id },
