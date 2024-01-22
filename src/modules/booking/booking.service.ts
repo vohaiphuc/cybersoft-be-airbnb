@@ -61,20 +61,23 @@ export class BookingService {
       throw new HttpException(Message.BOOKING.NOT_FOUND, HttpStatus.NOT_FOUND);
 
     const bookingList = await this.prisma.dat_phong.findMany({
-      where: { ma_phong: dto.ma_phong },
+      where: {
+        ma_phong: dto.ma_phong,
+        OR: [
+          {
+            ngay_den: { lt: new Date(dto.ngay_di) },
+            ngay_di: { gt: new Date(dto.ngay_den) },
+          },
+        ],
+      },
     });
 
-    const dateCheckIn = new Date(dto.ngay_den);
-    const dateCheckOut = new Date(dto.ngay_di);
-
-    bookingList.forEach((item) => {
-      if (!(dateCheckOut < item.ngay_den || item.ngay_di < dateCheckIn)) {
-        throw new HttpException(
-          Message.BOOKING.DOUBLE_BOOKED,
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-    });
+    if (bookingList.length !== 0) {
+      throw new HttpException(
+        Message.BOOKING.DOUBLE_BOOKED,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
 
     await this.prisma.dat_phong.create({
       data: { ...dto, ma_nguoi_dat: user.id },
@@ -99,20 +102,24 @@ export class BookingService {
     }
 
     const bookingList = await this.prisma.dat_phong.findMany({
-      where: { ma_phong: dto.ma_phong },
+      where: {
+        ma_phong: dto.ma_phong,
+        OR: [
+          {
+            ngay_den: { lt: new Date(dto.ngay_di) },
+            ngay_di: { gt: new Date(dto.ngay_den) },
+          },
+        ],
+        NOT: { id },
+      },
     });
 
-    const dateCheckIn = new Date(dto.ngay_den);
-    const dateCheckOut = new Date(dto.ngay_di);
-
-    bookingList.forEach((item) => {
-      if (!(dateCheckOut < item.ngay_den || item.ngay_di < dateCheckIn)) {
-        throw new HttpException(
-          Message.BOOKING.DOUBLE_BOOKED,
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-    });
+    if (bookingList.length !== 0) {
+      throw new HttpException(
+        Message.BOOKING.DOUBLE_BOOKED,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
 
     await this.prisma.dat_phong.update({
       where: { id },
