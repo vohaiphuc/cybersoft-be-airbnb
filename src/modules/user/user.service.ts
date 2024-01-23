@@ -93,6 +93,7 @@ export class UserService {
             where: { id },
             data: {
                 ...body,
+                birth_day: new Date(body.birth_day),
                 password: brcypt.hashSync(body.password, 10),
                 role: newRole,
             }

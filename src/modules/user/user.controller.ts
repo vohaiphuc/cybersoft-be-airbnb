@@ -20,7 +20,7 @@ export class UserController {
     return this.userService.getAllUsers()
   }
 
-  @AdminJwtGuard
+  // @AdminJwtGuard
   @Post("")
   createUser(
     @Body(CustomValidationPipe) body: CreateUserDto
