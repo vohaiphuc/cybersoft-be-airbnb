@@ -8,7 +8,7 @@ import { Role } from '../auth/dto/auth.dto';
 
 @Injectable()
 export class BookingService {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
   private prisma = new PrismaClient();
 
   private async checkUserPermission(id: number, email: string) {
@@ -57,6 +57,7 @@ export class BookingService {
       );
     }
   }
+
   async getBookingList() {
     const bookingList = await this.prisma.dat_phong.findMany({});
 

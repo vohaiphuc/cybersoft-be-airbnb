@@ -9,18 +9,33 @@ import { UpdateRoomDto } from './dto/update-room.dto';
 export class RoomService {
   private prisma = new PrismaClient();
 
+  private async locationValid(id: number) {
+    const location = await this.prisma.vi_tri.findUnique({
+      where: { id },
+    });
+    if (!location) {
+      throw new HttpException(Message.LOCATION.NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
+    return location;
+  }
+
+  private async roomValid(id: number) {
+    const room = await this.prisma.phong.findUnique({
+      where: { id },
+    });
+    if (!room) {
+      throw new HttpException(Message.ROOM.NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
+    return room;
+  }
+
   async getAllRooms() {
     const roomList = await this.prisma.phong.findMany();
     return ResponseData(HttpStatus.OK, Message.ROOM.SUCCESS, roomList);
   }
 
   async createRoom(createRoomDto: CreateRoomDto) {
-    const location = await this.prisma.vi_tri.findUnique({
-      where: { id: createRoomDto.vi_tri_id },
-    });
-    if (!location) {
-      throw new HttpException(Message.LOCATION.NOT_FOUND, HttpStatus.NOT_FOUND);
-    }
+    await this.locationValid(createRoomDto.vi_tri_id);
     await this.prisma.phong.create({
       data: createRoomDto,
     });
@@ -28,12 +43,7 @@ export class RoomService {
   }
 
   async getRoomByLocationId(locationId: number) {
-    const location = await this.prisma.vi_tri.findUnique({
-      where: { id: locationId },
-    });
-    if (!location) {
-      throw new HttpException(Message.LOCATION.NOT_FOUND, HttpStatus.NOT_FOUND);
-    }
+    await this.locationValid(locationId);
     const roomByLocationId = await this.prisma.phong.findMany({
       where: {
         vi_tri_id: locationId,
@@ -68,25 +78,13 @@ export class RoomService {
   }
 
   async getRoomById(id: number) {
-    const room = await this.prisma.phong.findUnique({
-      where: { id },
-    });
+    const room = await this.roomValid(id);
     return ResponseData(HttpStatus.OK, Message.ROOM.SUCCESS_ID, room);
   }
 
   async updateRoomById(id: number, updateRoomDto: UpdateRoomDto) {
-    const room = await this.prisma.phong.findUnique({
-      where: { id },
-    });
-    if (!room) {
-      throw new HttpException(Message.ROOM.NOT_FOUND, HttpStatus.NOT_FOUND);
-    }
-    const location = await this.prisma.vi_tri.findUnique({
-      where: { id: updateRoomDto.vi_tri_id },
-    });
-    if (!location) {
-      throw new HttpException(Message.LOCATION.NOT_FOUND, HttpStatus.NOT_FOUND);
-    }
+    await this.roomValid(id);
+    await this.locationValid(updateRoomDto.vi_tri_id);
     await this.prisma.phong.update({
       where: { id },
       data: updateRoomDto,
@@ -95,12 +93,7 @@ export class RoomService {
   }
 
   async deleteRoomById(id: number) {
-    const room = await this.prisma.phong.findUnique({
-      where: { id },
-    });
-    if (!room) {
-      throw new HttpException(Message.ROOM.NOT_FOUND, HttpStatus.NOT_FOUND);
-    }
+    await this.roomValid(id);
     const bookedRoom = await this.prisma.dat_phong.findFirst({
       where: {
         ma_phong: id,
@@ -119,12 +112,7 @@ export class RoomService {
     if (!file) {
       throw new HttpException(Message.IMAGE.NOT_FOUND, HttpStatus.BAD_REQUEST);
     }
-    const room = await this.prisma.phong.findUnique({
-      where: { id },
-    });
-    if (!room) {
-      throw new HttpException(Message.ROOM.NOT_FOUND, HttpStatus.NOT_FOUND);
-    }
+    await this.roomValid(id);
     await this.prisma.phong.update({
       where: {
         id,

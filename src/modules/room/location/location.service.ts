@@ -9,6 +9,16 @@ import { UpdateLocationDto } from './dto/update-location.dto';
 export class LocationService {
   private prisma = new PrismaClient();
 
+  private async locationValid(id: number) {
+    const location = await this.prisma.vi_tri.findUnique({
+      where: { id },
+    });
+    if (!location) {
+      throw new HttpException(Message.LOCATION.NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
+    return location;
+  }
+
   async getAllLocations() {
     const locationList = await this.prisma.vi_tri.findMany();
     return ResponseData(HttpStatus.OK, Message.LOCATION.SUCCESS, locationList);
@@ -43,22 +53,12 @@ export class LocationService {
   }
 
   async getLocationById(id: number) {
-    const location = await this.prisma.vi_tri.findUnique({
-      where: { id },
-    });
-    if (!location) {
-      throw new HttpException(Message.LOCATION.NOT_FOUND, HttpStatus.NOT_FOUND);
-    }
+    const location = await this.locationValid(id);
     return ResponseData(HttpStatus.OK, Message.LOCATION.SUCCESS_ID, location);
   }
 
   async updateLocationById(id: number, updateLocationDto: UpdateLocationDto) {
-    const location = await this.prisma.vi_tri.findUnique({
-      where: { id },
-    });
-    if (!location) {
-      throw new HttpException(Message.LOCATION.NOT_FOUND, HttpStatus.NOT_FOUND);
-    }
+    await this.locationValid(id);
     await this.prisma.vi_tri.update({
       where: { id },
       data: updateLocationDto,
@@ -67,12 +67,7 @@ export class LocationService {
   }
 
   async deleteLocationById(id: number) {
-    const location = await this.prisma.vi_tri.findUnique({
-      where: { id },
-    });
-    if (!location) {
-      throw new HttpException(Message.LOCATION.NOT_FOUND, HttpStatus.NOT_FOUND);
-    }
+    await this.locationValid(id);
     const usedLocation = await this.prisma.phong.findFirst({
       where: { vi_tri_id: id },
     });
@@ -92,12 +87,7 @@ export class LocationService {
     if (!file) {
       throw new HttpException(Message.IMAGE.NOT_FOUND, HttpStatus.BAD_REQUEST);
     }
-    const location = await this.prisma.vi_tri.findUnique({
-      where: { id },
-    });
-    if (!location) {
-      throw new HttpException(Message.LOCATION.NOT_FOUND, HttpStatus.NOT_FOUND);
-    }
+    await this.locationValid(id);
     await this.prisma.vi_tri.update({
       where: {
         id,
