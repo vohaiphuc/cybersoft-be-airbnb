@@ -1,0 +1,1352 @@
+{
+	"info": {
+		"_postman_id": "46f2854b-1c0d-4897-8cfb-1e3751924a2c",
+		"name": "AirBnb",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31034333",
+		"_collection_link": "https://speeding-crater-756301.postman.co/workspace/New-Team-Workspace~7bdfc38d-1f6d-44d5-8003-cb632ff21ce2/collection/31034333-46f2854b-1c0d-4897-8cfb-1e3751924a2c?action=share&source=collection_link&creator=31034333"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Sign Up",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Trần Thị Mỹ Hà\",\r\n    \"email\": \"myha148@gmail.com\",\r\n    \"password\": \"asdfghjk\",\r\n    \"phone\": \"0956200152\",\r\n    \"birth_day\": \"2000-10-13\",\r\n    \"gender\": \"FEMALE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/auth/signup",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signup"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sign In",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Response status code is 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(201);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response has the required fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData).to.have.property('statusCode');\r",
+									"    pm.expect(responseData).to.have.property('message');\r",
+									"    pm.expect(responseData).to.have.property('content');\r",
+									"    pm.expect(responseData).to.have.property('timestamp');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Access token is a non-empty string\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData.content.access_token).to.be.a('string').and.to.have.lengthOf.at.least(1);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"User object has the required fields\", function () {\r",
+									"  const responseData = pm.response.json();\r",
+									"  \r",
+									"  pm.expect(responseData.content.user).to.be.an('object');\r",
+									"  const requiredFields = ['name', 'email', 'phone', 'birth_day', 'gender', 'role'];\r",
+									"  requiredFields.forEach(field => {\r",
+									"    pm.expect(responseData.content.user).to.have.property(field);\r",
+									"  });\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Timestamp is in a valid date format\", function () {\r",
+									"  const responseData = pm.response.json();\r",
+									"  \r",
+									"  pm.expect(responseData.timestamp).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$/);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"myha148@gmail.com\",\r\n    \"password\": \"asdfghjk\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/auth/signin",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Response status code is 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(201);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response has the required fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData).to.have.property('statusCode');\r",
+									"    pm.expect(responseData).to.have.property('message');\r",
+									"    pm.expect(responseData).to.have.property('content');\r",
+									"    pm.expect(responseData).to.have.property('timestamp');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Access token is a non-empty string\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData.content.access_token).to.be.a('string').and.to.have.lengthOf.at.least(1);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"User object has the required fields\", function () {\r",
+									"  const responseData = pm.response.json();\r",
+									"  \r",
+									"  pm.expect(responseData.content.user).to.be.an('object');\r",
+									"  const requiredFields = ['name', 'email', 'phone', 'birth_day', 'gender', 'role'];\r",
+									"  requiredFields.forEach(field => {\r",
+									"    pm.expect(responseData.content.user).to.have.property(field);\r",
+									"  });\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Timestamp is in a valid date format\", function () {\r",
+									"  const responseData = pm.response.json();\r",
+									"  \r",
+									"  pm.expect(responseData.timestamp).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$/);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"myha13y@gmail.com\",\r\n    \"password\": \"asdfghjk\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/auth/refresh-token",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"refresh-token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comment",
+			"item": [
+				{
+					"name": "Get All Comments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/binh-luan",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"binh-luan"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Comments By Room",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/binh-luan/lay-binh-luan-theo-phong/:ma_phong",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"binh-luan",
+								"lay-binh-luan-theo-phong",
+								":ma_phong"
+							],
+							"variable": [
+								{
+									"key": "ma_phong",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add New Comment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ma_phong\": 3,\r\n    \"noi_dung\": \"Trải nghiệm khá ổn, dịch vụ tốt, nhân viên thân thiện\",\r\n    \"sao_binh_luan\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/binh-luan",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"binh-luan"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fix Comment",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ma_phong\": 3,\r\n    \"noi_dung\": \"Trải nghiệm tạm ổn\",\r\n    \"sao_binh_luan\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/binh-luan/:id",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"binh-luan",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Comment",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/binh-luan/:id",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"binh-luan",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Booking",
+			"item": [
+				{
+					"name": "Get All Booking List",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/dat-phong",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"dat-phong"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Booking Detail By Id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/dat-phong/:id",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"dat-phong",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Booking List By User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/dat-phong/lay-theo-nguoi-dung/:ma_nguoi_dung",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"dat-phong",
+								"lay-theo-nguoi-dung",
+								":ma_nguoi_dung"
+							],
+							"variable": [
+								{
+									"key": "ma_nguoi_dung",
+									"value": "40"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add New Booking Schedule",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ma_phong\": 3,\r\n    \"ngay_den\": \"2024-06-20T04:52:31.002Z\",\r\n    \"ngay_di\": \"2024-06-25T04:52:31.002Z\",\r\n    \"so_luong_khach\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/dat-phong",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"dat-phong"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fix Booking Schedule",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ma_phong\": 3,\r\n    \"ngay_den\": \"2024-06-19T04:52:31.000Z\",\r\n    \"ngay_di\": \"2024-06-25T04:52:31.000Z\",\r\n    \"so_luong_khach\": 6\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/dat-phong/:id",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"dat-phong",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Booking Schedule",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/dat-phong/:id",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"dat-phong",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "11"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/users",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User By Id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/users/:id",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "38"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search User By Name",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/users/search/:TenNguoiDung",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"search",
+								":TenNguoiDung"
+							],
+							"query": [
+								{
+									"key": "TenNguoiDung",
+									"value": "user%6",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "TenNguoiDung",
+									"value": "Hà"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search User With Limit Results",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/users/phan-trang-tim-kiem?pageIndex=1&pageSize=5&name=phuc",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"phan-trang-tim-kiem"
+							],
+							"query": [
+								{
+									"key": "pageIndex",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "5"
+								},
+								{
+									"key": "name",
+									"value": "phuc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add New User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Phuc\",\r\n    \"email\": \"admin15@example.com\",\r\n    \"password\": \"123456\",\r\n    \"phone\": \"0965235645\",\r\n    \"birth_day\": \"1994-12-04\",\r\n    \"gender\": \"MALE\",\r\n    \"role\": \"ADMIN\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/users",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Phuc Vo\",\r\n    \"email\": \"admin15@example.com\",\r\n    \"password\": \"123456\",\r\n    \"phone\": \"0123456789\",\r\n    \"birth_day\": \"2004-12-04\",\r\n    \"gender\": \"MALE\",\r\n    \"role\": \"ADMIN\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/users/19",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"19"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/users/:id",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "38"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Room",
+			"item": [
+				{
+					"name": "Get All Room",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/api/rooms",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"rooms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Room By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/api/rooms/:id",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"rooms",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Room By Position",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/api/rooms/get-room-by-location-id?locationId=1",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"rooms",
+								"get-room-by-location-id"
+							],
+							"query": [
+								{
+									"key": "locationId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Room With Limit Results",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/api/rooms/pagination-search?pageIndex=1&pageSize=5&keyword=room",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"rooms",
+								"pagination-search"
+							],
+							"query": [
+								{
+									"key": "pageIndex",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "5"
+								},
+								{
+									"key": "keyword",
+									"value": "room"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add New Room",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"ten_phong\": \"Phòng VIP\",\r\n  \"khach\": 4,\r\n  \"phong_ngu\": 2,\r\n  \"giuong\": 2,\r\n  \"phong_tam\": 1,\r\n  \"mo_ta\": \"Phòng hạng sang dành cho cặp đôi hoặc gia đình.\",\r\n  \"gia_tien\": 3000000,\r\n  \"may_giat\": true,\r\n  \"ban_ui\": true,\r\n  \"tivi\": true,\r\n  \"dieu_hoa\": true,\r\n  \"wifi\": true,\r\n  \"bep\": true,\r\n  \"do_xe\": true,\r\n  \"ho_boi\": true,\r\n  \"vi_tri_id\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/rooms",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"rooms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Image Of Room",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{domain}}/api/rooms/upload-image?roomId=1",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"rooms",
+								"upload-image"
+							],
+							"query": [
+								{
+									"key": "roomId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fix Room",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"ten_phong\": \"Phòng Hạng Phổ Thông\",\r\n  \"khach\": 2,\r\n  \"phong_ngu\": 1,\r\n  \"giuong\": 2,\r\n  \"phong_tam\": 1,\r\n  \"mo_ta\": \"Phòng dành cho các bạn trẻ đến trải nghiệm và đi du lịch\",\r\n  \"gia_tien\": 1000000,\r\n  \"may_giat\": true,\r\n  \"ban_ui\": true,\r\n  \"tivi\": true,\r\n  \"dieu_hoa\": true,\r\n  \"wifi\": true,\r\n  \"bep\": true,\r\n  \"do_xe\": true,\r\n  \"ho_boi\": true,\r\n  \"vi_tri_id\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/rooms/:id",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"rooms",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Room",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/rooms/:id",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"rooms",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Location",
+			"item": [
+				{
+					"name": "Get All Location",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/api/locations",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"locations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Location By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/api/locations/:id",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"locations",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Location With Limit Results",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/api/locations/pagination-search?pageIndex=1&pageSize=5&keyword=a",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"locations",
+								"pagination-search"
+							],
+							"query": [
+								{
+									"key": "pageIndex",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "5"
+								},
+								{
+									"key": "keyword",
+									"value": "a"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add New Location",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"ten_vi_tri\": \"Hà Nội\",\r\n  \"tinh_thanh\": \"Hà Nội\",\r\n  \"quoc_gia\": \"Việt Nam\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/locations",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"locations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Image Of Location",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{domain}}/api/locations/upload-image?locationId=1",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"locations",
+								"upload-image"
+							],
+							"query": [
+								{
+									"key": "locationId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Location",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"ten_vi_tri\": \"Nha Trang\",\r\n  \"tinh_thanh\": \"Khánh Hòa\",\r\n  \"quoc_gia\": \"Việt Nam\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/locations/:id",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"locations",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Location",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/locations/:id",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"locations",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "domain",
+			"value": "http://localhost:8080"
+		},
+		{
+			"key": "token",
+			"value": "asd",
+			"type": "string",
+			"disabled": true
+		}
+	]
+}
