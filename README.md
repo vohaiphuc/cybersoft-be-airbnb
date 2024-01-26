@@ -1,139 +1,70 @@
-# Quy tắc chung khi làm việc với controller và service:
+# Airbnb Clone Project – BCS08 Final Project (Backend)
 
-**Controller**
+<p align="center">
+  <a href="https://github.com/vohaiphuc/cybersoft-be-airbnb" target="_blank"><img src="https://img.shields.io/github/followers/vohaiphuc" alt="Github profile" /></a>
+  <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+</p>
 
-- Làm api route
-- Xử lý middleware (guard, filter, file upload)
-- Validate input (pipe)
+This project serves as the backend for our Airbnb clone, a popular online marketplace for lodging, primarily homestays for vacation rentals, and tourism activities. The aim is to provide essential functionalities and features required for the Airbnb platform.
 
-**Service**
+## Features
 
-- Xử lý business logic
-- Trả về kết quả trong database
-- Throw lỗi
+- User authentication using JWT (JSON Web Tokens)
+- Property management (Create, Read, Update, Delete)
+- Image upload for property listings using Multer
+- API documentation using Swagger
+- Testing API endpoints with Postman
+- Database storage and retrieval using MySQL
+- Containerization with Docker and Podman
 
-**Lưu ý**
+## Technologies and Tools used 👀
 
-- Xử lý lỗi / kết quả: viết trong service, không viết trong controller
+- Included in the learning curriculum:
 
-# Đặt tên
+  - NestJS
+  - Express.js
+  - JWT (JSON Web Tokens)
+  - Multer
+  - Swagger
+  - Postman
+  - Docker
+  - MySQL
+  - Podman
+  - Yarn
+  - VS Code, AstroNvim
+  - Version control: GitHub
 
-**Tất cả file đặt tên bằng tiếng Anh, theo cú pháp như sau:**
-<br>[Tên file].[Thư mục / loại file].ts
+- In the future, the team plans to explore and integrate additional technologies such as SocketIO and Stripe to enhance the backend functionality and overall user experience.
 
-Tên file:
+## Installation
 
-- Bỏ dấu [ ] khi sử dụng
-- Nếu 2 từ: cách nhau bởi "-" (vd: http-exception)
+1. Clone the repository: `git clone https://github.com/vohaiphuc/cybersoft-be-airbnb.git`
+2. Navigate to the project directory: `cd cybersoft-be-airbnb`
+3. Install dependencies: `yarn install`
+4. Run the application using the command: `yarn start`
 
-Thư mục / loại file:
+## Configuration
 
-- Bỏ dấu [ ] khi sử dụng
-- Thư mục chứa file đó
-- Loại file: controller / module / service
+1. Create a `.env` file in the root directory.
+2. Add the following environment variables:
 
-Lưu ý: với các file ko thể đặt theo cú pháp này, hãy đặt tên có ý nghĩa (nhìn vào tên ít nhất có thể đoán được nó có tác dụng gì)
+   ```env
+   JWT_SECRET=your_secret_key_for_jwt
+   MYSQL_HOST=your_mysql_host
+   MYSQL_PORT=your_mysql_port
+   MYSQL_USER=your_mysql_user
+   MYSQL_PASSWORD=your_mysql_password
+   MYSQL_DATABASE=your_mysql_database
+   ```
 
-# Sắp xếp decorator (trong controller) theo thứ tự
+## Useful Links
 
-1. HTTP method + Route (vd: @Get("user") )
-2. (optional) Mô tả swagger: @ApiOperation({ summary: "Viết mô tả ở đây" })
-3. Middleware / Metadata:
+🌟 Swagger API: https://airbnbnew.cybersoft.edu.vn/swagger/index.html
 
-- 3a.
-  - ApiBearerAuth
-  - @UseGuards
-  - @UseFilters
-  - @UsePipes
-- 3b.
-  - @UseInterceptor
-  - @ApiConsumes
+🌟 Postman collection: [Link to Postman Collection](#)
 
-4. Handle request:
-   4a.
-   - @ApiBody
+🌟 You can also view our Airbnb frontend project: https://github.com/bcs08-group5-airbnb/airbnb-frontend
 
-Controller method
+##
 
-# Viết mô tả swagger
-
-[LÀM GÌ]: nội dung
-
-- VD:
-  - LẤY: danh sách tất cả phòng
-  - CẬP NHẬT: ảnh đại diện của người dùng
-
-LÀM GÌ:
-
-- Dùng tiếng Việt
-- VIẾT HOA
-- Sử dụng động từ: vd: LẤY / ĐĂNG / XÓA / CẬP NHẬT
-
-nội dung:
-
-- Dùng tiếng Việt
-- viết thường
-- Mục đích của API này
-
-# Viết body swagger (để hiện input)
-
-Các bước gán type vào body (để swagger hiện input field)
-
-1. **Tạo type**
-
-- Thư mục dto trong mỗi module là thư mục chứa các type
-- Tham khảo:
-  https://github.com/vohaiphuc/pinterest-be/blob/main/src/modules/user/dto/update-user.dto.ts
-
-2. **Dùng decorator ApiBody**
-
-- @ApiBody({type: UpdateUserDto})
-
-# Dùng biến chung /common
-
-1. **src\common\const\message.const.ts**
-
-- Quản lý danh sách các thông báo trả về
-
-2. **src\common\util\response.utils.ts**
-
-- Định dạnh chuẩn cho các response (bao gồm: statusCode, message, content, timestamp)
-
-# Sử dụng filter / Xử lý lỗi trả về
-
-Một số lưu ý:
-
-1. **Lỗi mạc định**
-
-Trong NestJs, nếu http request gặp lỗi thì nó sẽ tự động throw lỗi mạc định:
-{
-"statusCode": 500,
-"message": "Internal server error"
-}
-Cho nên không cần làm theo giảng viên là viết if else statusCode !== 500 ...
-
-2. **try...catch...**
-
-- Việc sử dụng cú pháp try...catch... liên tục trong các controller method sẽ gây lặp lại không cần thiết. Với 10 api trong 1 controller sẽ tạo ra "Try Catch Tower" (giống Callback Hell)
-- Trong NestJs, với những thao tác lặp đi lặp lại, có thể gộp chúng vào 1 decorator (thậm chí có thể gộp nhiều decorator vào 1 decorator)
-- Trong trường hợp này, decorator @UseFilters với filter tên là HttpExceptionFilter - nhận nhiệm vụ xử lý các exception (lỗi) xảy ra trong quá trình gọi API
-- src\filters\http-exception.fitler.ts (copy từ NestJs document)
-
-Tham khảo:
-https://github.com/vohaiphuc/pinterest-be/blob/main/src/modules/user/user.controller.ts
-
-- Trong file này, @UseFilters được để cùng cấp với @Controller. Các controller khác đều được viết tương tự
-- Không để @UseFilters ở cấp global, vì trong quá trình code, nếu muốn test try...catch... ở 1 api, thì chỉ cần comment @UseFilters ở controller hiện tại, và viết try...catch... ở api, việc này sẽ giúp hạn chế chỉnh sửa trực tiếp vào file global => hạn chế lỗi khi merge
-
-## Xử lý lỗi / kết quả
-
-- Với lỗi:
-  - throw new HttpException()
-- Với kết quả:
-  - return ResponseData()
-
-**Lưu ý: Xử lý lỗi / kết quả đều phải được viết trong service, không viết trong controller**
-
-# Hướng dẫn sử dụng useGuard
-
-_Đang cập nhật (khi nào viết xong JWT thì Phúc sẽ phổ biến sau)_
+This project is developed and contributed by [Your Name](https://github.com/yourgithubusername) and [Your Teammate's Name](https://github.com/yourteammategithubusername).
