@@ -10,7 +10,7 @@ This project serves as the backend for our Airbnb clone, a popular online market
 - API documentation using Swagger
 - Testing API endpoints with Postman
 - Database storage and retrieval using MySQL
-- Containerization with Docker and Podman
+- Containerization with Docker
 
 ## Technologies and Tools used 👀
 
