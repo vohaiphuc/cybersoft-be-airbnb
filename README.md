@@ -32,7 +32,7 @@ This project serves as the backend for our Airbnb clone, a popular online market
 1. Clone the repository: `git clone https://github.com/vohaiphuc/cybersoft-be-airbnb.git`
 2. Navigate to the project directory: `cd cybersoft-be-airbnb`
 3. Install dependencies: `yarn install`
-4. Run the `database/airbnb.sql` file for MySQL
+4. Run the `database/airbnb.sql` file for MySQL (this project uses the database-first approach)
 5. Run `yarn prisma generate`
 6. Run the application using the command: `yarn start` or `yarn start:dev`
 
