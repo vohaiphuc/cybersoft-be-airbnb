@@ -12,7 +12,7 @@ This project serves as the backend for our Airbnb clone, a popular online market
 - Database storage and retrieval using MySQL
 - Containerization with Docker
 
-## Technologies and Tools used 👀
+## Technologies and Tools used
 
 - Included in the learning curriculum:
 
