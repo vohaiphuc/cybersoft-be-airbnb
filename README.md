@@ -25,7 +25,7 @@ This project serves as the backend for our Airbnb clone, a popular online market
   - MySQL
   - Yarn package manager
 
-- In the future, the team plans to explore and integrate additional technologies such as SocketIO to enhance the backend functionality.
+- In the future, the team plans to explore and integrate additional technologies such as SocketIO and CircleCI to enhance the backend functionality.
 
 ## Installation
 
