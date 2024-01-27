@@ -21,7 +21,7 @@ This project serves as the backend for our Airbnb clone, a popular online market
   - Multer
   - Swagger
   - Postman
-  - Docker
+  - Docker (or Podman)
   - MySQL
   - Yarn package manager
 
